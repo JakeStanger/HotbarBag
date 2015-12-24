@@ -26,7 +26,7 @@ import roboguy99.hotbarBag.network.packet.InventoryUpdate;
 import roboguy99.hotbarBag.network.packet.InventoryUpdate.Handle;
 
 /**
- * Main class. Handles mod initialisation. Test
+ * Main class. Handles mod initialisation.
  * 
  * @author Roboguy99
  *		
@@ -36,7 +36,7 @@ public class HotbarBag
 {
 	// Mod data. Fallback if mc-mod.info fails to load.
 	public static final String modID = "HotbarBag";
-	public static final String modVersion = "0.9.0";
+	public static final String modVersion = "1.0.0";
 	public static final String name = "Hotbar Bag";
 	
 	public static final Logger logger = LogManager.getLogger("Hotbar Bag");
