@@ -1,8 +1,8 @@
-.git
-.gradle
-.settings
-bin
-build
-eclipse
+/.git/
+/.gradle/
+/.settings/
+/bin/
+/build/
+/eclipse/
 .classpath
 .project
