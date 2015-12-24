@@ -1,2 +1,2 @@
 # HotbarBag
-Minecraft mod allowing you to quickly switch between things on your hotbar.
+Minecraft mod allowing you to quickly switch between things on your hotbar. In development.
