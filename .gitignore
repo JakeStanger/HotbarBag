@@ -1,8 +1,4 @@
-/.git/
-/.gradle/
-/.settings/
-/bin/
-/build/
-/eclipse/
-.classpath
-.project
+*
+!/src/**
+!LICENSE
+!README.md
