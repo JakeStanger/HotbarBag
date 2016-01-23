@@ -26,6 +26,7 @@ public class BagInventory implements IInventory
 	public BagInventory(ItemStack itemStack)
 	{
 		this.invItem = itemStack;
+		//this.readSettingsFromNBT(itemStack.getTagCompound());
 		
 		// If for any reason the itemstack has no NBT data
 		if (itemStack != null && !itemStack.hasTagCompound()) // Sometimes if you're too fast the held item returns null when it isn't
@@ -187,8 +188,6 @@ public class BagInventory implements IInventory
 	{
 		Config config = HotbarBag.instance.config; // Get config instance
 		
-		HotbarBag.logger.info("Loading item settings");
-		
 		NBTTagList settings = compound.getTagList("Settings", NBT.TAG_COMPOUND);
 		
 		config.setBackgroundRed(settings.getCompoundTagAt(0).getInteger("backgroundRed"));
@@ -234,8 +233,6 @@ public class BagInventory implements IInventory
 		Config config = HotbarBag.instance.config; // Get config instance
 		
 		// Write item settings
-		HotbarBag.logger.info("Saving item settings");
-		
 		NBTTagList settings = new NBTTagList();
 		
 		NBTTagCompound background = new NBTTagCompound();

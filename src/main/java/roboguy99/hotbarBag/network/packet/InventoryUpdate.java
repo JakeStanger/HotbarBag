@@ -40,7 +40,7 @@ public class InventoryUpdate implements IMessage
 		ByteBufUtils.writeVarInt(buf, this.sectorMouseIsIn, 1);
 	}
 	
-	public static class Handle implements IMessageHandler<InventoryUpdate, IMessage>
+	public static class InventoryHandle implements IMessageHandler<InventoryUpdate, IMessage>
 	{
 		@Override
 		public IMessage onMessage(InventoryUpdate message, MessageContext ctx)

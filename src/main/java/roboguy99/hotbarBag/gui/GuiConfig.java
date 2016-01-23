@@ -13,6 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import roboguy99.hotbarBag.Config;
 import roboguy99.hotbarBag.HotbarBag;
 import roboguy99.hotbarBag.inventory.BagInventory;
+import roboguy99.hotbarBag.network.packet.InventoryUpdate;
+import roboguy99.hotbarBag.network.packet.SettingsUpdate;
 
 /**
  * In-game configuration GUI
@@ -93,7 +95,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.heldItem = this.minecraft.thePlayer.getHeldItem();
 		this.inventory = new BagInventory(this.heldItem);
 		
-		this.inventory.readSettingsFromNBT(this.heldItem.getTagCompound());
+		inventory.readSettingsFromNBT(heldItem.getTagCompound());
 		
 		this.guiLeft = (this.width - this.xSize) / 2;
 		this.guiTop = (this.height - this.ySize) / 2;
@@ -202,7 +204,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 		if (btn.id == this.ID_RESET) // Reset everything back to the default value
 		{
 			this.config.setAllValuesToDefault();
-			this.inventory.writeSettingsToNBT(this.heldItem.getTagCompound()); // We only wan't to write, updating would undo the defaults
+			HotbarBag.networkWrapper.sendToServer(new SettingsUpdate()); // We only wan't to write, updating would undo the defaults
 			this.updateSliders();
 			this.txtName.setText(this.config.DEFAULT_NAME);
 		}
@@ -226,7 +228,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.config.setRadius(this.sldRadius.getValueInt());
 		this.config.setItemRadius(this.sldItemRadius.getValueInt());
 		
-		this.inventory.writeSettingsToNBT(this.heldItem.getTagCompound());
+		HotbarBag.networkWrapper.sendToServer(new SettingsUpdate());
 	}
 	
 	/**
@@ -265,3 +267,4 @@ public class GuiConfig extends GuiScreen implements ISlider
 		return true;
 	}
 }
+	
