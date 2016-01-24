@@ -4,7 +4,7 @@
     "modid": "hotbarBag",
     "name": "Hotbar Bag",
     "description": "Adds a bag which can be used to store items in. Weapon-wheel style item switching.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "mcversion": "1.7.10",
     "url": "https://github.com/Roboguy99/HotbarBag",
     "updateUrl": "",
