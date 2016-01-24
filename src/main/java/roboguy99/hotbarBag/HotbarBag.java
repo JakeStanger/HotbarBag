@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -43,8 +42,6 @@ public class HotbarBag
 	
 	public static final Logger logger = LogManager.getLogger("Hotbar Bag");
 	
-	public static KeyBinding keyHUD;
-	
 	@SidedProxy(clientSide = "roboguy99.hotbarBag.network.ClientProxy", serverSide = "roboguy99.hotbarBag.network.CommonProxy")
 	public static CommonProxy proxy;
 	
@@ -59,8 +56,6 @@ public class HotbarBag
 	public static final int GUI_CONFIG = modGuiIndex++;
 	
 	public static HotbarBag instance;
-	
-	private RenderOverlayHandler renderOverlayEventHandler;
 	
 	public Config config;
 	
@@ -88,18 +83,11 @@ public class HotbarBag
 		logger.info("Initialising");
 		
 		new ItemBag();
-		
-		this.keyHUD = new KeyBinding("key.bagHUD", Keyboard.KEY_F, "key.categories.inventory");
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
-	{
-		this.renderOverlayEventHandler = new RenderOverlayHandler();
+	{	
 		
-		FMLCommonHandler.instance().bus().register(new ClientTickHandler(this.renderOverlayEventHandler));
-		FMLCommonHandler.instance().bus().register(new RenderTickHandler(this.renderOverlayEventHandler));
-		
-		MinecraftForge.EVENT_BUS.register(this.renderOverlayEventHandler);
 	}
 }

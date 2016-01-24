@@ -28,6 +28,7 @@ import roboguy99.hotbarBag.Config;
 import roboguy99.hotbarBag.HotbarBag;
 import roboguy99.hotbarBag.inventory.BagInventory;
 import roboguy99.hotbarBag.item.ItemBag;
+import roboguy99.hotbarBag.network.ClientProxy;
 
 /**
  * Draw the circle and icons. Where the magic happens
@@ -35,6 +36,7 @@ import roboguy99.hotbarBag.item.ItemBag;
  * @author Roboguy99
  * 		
  */
+@SideOnly(Side.CLIENT)
 public class RenderOverlayHandler extends Gui
 {
 	private static final int TEXTURE_HALF_SIZE = 8;
@@ -53,8 +55,8 @@ public class RenderOverlayHandler extends Gui
 	
 	private boolean isDisplayed;
 	
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SideOnly(Side.CLIENT)
 	public void onRenderExperienceBar(RenderGameOverlayEvent.Post event)
 	{
 		Item holding;
@@ -63,7 +65,7 @@ public class RenderOverlayHandler extends Gui
 			if (event.type == ElementType.ALL)
 			{
 				holding = minecraft.thePlayer.getHeldItem().getItem();
-				if (holding instanceof ItemBag && HotbarBag.keyHUD.getIsKeyPressed())
+				if (holding instanceof ItemBag && ClientProxy.keyHUD.getIsKeyPressed())
 				{
 					this.inventory = new BagInventory(minecraft.thePlayer.getHeldItem());
 					
