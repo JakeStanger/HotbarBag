@@ -27,7 +27,9 @@ public class ClientTickHandler
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event)
 	{
-		if (event.phase == TickEvent.Phase.START && Minecraft.getMinecraft().theWorld != null)
+		Minecraft minecraft = Minecraft.getMinecraft();
+		
+		if (event.phase == TickEvent.Phase.START && minecraft.theWorld != null)
 		{
 			if(HotbarBag.keyHUD.getIsKeyPressed() && !this.pressedLastTick) this.firstTick = true;
 			else this.firstTick = false;
@@ -38,7 +40,7 @@ public class ClientTickHandler
 			}
 			this.pressedLastTick = HotbarBag.keyHUD.getIsKeyPressed();
 			
-			if(this.firstTick) this.renderOverlayHandler.getInventory().readSettingsFromNBT(Minecraft.getMinecraft().thePlayer.getHeldItem().getTagCompound());
+			if(this.firstTick && minecraft.thePlayer.getHeldItem() != null) this.renderOverlayHandler.getInventory().readSettingsFromNBT(minecraft.thePlayer.getHeldItem().getTagCompound());
 		}
 	}
 }
