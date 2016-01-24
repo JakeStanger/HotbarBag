@@ -3,6 +3,7 @@ package roboguy99.hotbarBag.handler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import roboguy99.hotbarBag.HotbarBag;
 import roboguy99.hotbarBag.item.ItemBag;
@@ -31,6 +32,7 @@ public class ClientTickHandler
 	public void onClientTick(TickEvent.ClientTickEvent event)
 	{
 		Minecraft minecraft = Minecraft.getMinecraft();
+		EntityPlayer player = minecraft.thePlayer;
 		
 		if (event.phase == TickEvent.Phase.START && minecraft.theWorld != null)
 		{
@@ -39,12 +41,15 @@ public class ClientTickHandler
 			
 			if (this.pressedLastTick && !ClientProxy.keyHUD.getIsKeyPressed())
 			{
-				if(!(minecraft.thePlayer.inventory.getStackInSlot(0).getItem() instanceof ItemBag)) HotbarBag.networkWrapper.sendToServer(new InventoryUpdate(this.renderOverlayHandler.getMouseSector(), this.renderOverlayHandler.getInventory()));
-				else minecraft.thePlayer.addChatMessage(new ChatComponentText("You cannot put a bag inside a bag!"));
+				if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemBag) //TODO Tidy this
+				{
+					if(!(player.inventory.getStackInSlot(0) != null && player.inventory.getStackInSlot(0).getItem() instanceof ItemBag)) HotbarBag.networkWrapper.sendToServer(new InventoryUpdate(this.renderOverlayHandler.getMouseSector(), this.renderOverlayHandler.getInventory()));
+					else player.addChatMessage(new ChatComponentText("Infinite storage is *just* a bit overpowered, don't you think?")); //TODO Make this only appear once maybe
+				}
 			}
 			this.pressedLastTick = ClientProxy.keyHUD.getIsKeyPressed();
 			
-			if(this.firstTick && minecraft.thePlayer.getHeldItem() != null) this.renderOverlayHandler.getInventory().readSettingsFromNBT(minecraft.thePlayer.getHeldItem().getTagCompound());
+			if(this.firstTick && player.getHeldItem() != null) this.renderOverlayHandler.getInventory().readSettingsFromNBT(player.getHeldItem().getTagCompound());
 		}
 	}
 }
