@@ -21,6 +21,6 @@ public class SlotItemInv extends Slot
 	@Override
 	public boolean isItemValid(ItemStack itemStack)
 	{
-		return !(itemStack.getItem() instanceof ItemBag);
+		return !(itemStack.getItem() instanceof ItemBag); //TODO This isn't working?
 	}
 }
