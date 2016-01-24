@@ -120,12 +120,6 @@ public class RenderOverlayHandler extends Gui
 								endAngle = anglePerSector * (i + 1);
 							}
 							if (startAngle < mouseAngle && mouseAngle < endAngle) this.sectorMouseIsIn = i;
-							
-							// Play sound effect on sector change TODO Fix sound
-							// HotbarBag.logger.info("A " + this.sectorMouseIsIn + " " + this.lastSector);
-							
-						
-							// HotbarBag.logger.info("B " + this.sectorMouseIsIn + " " + this.lastSector);
 						}
 						
 						if (this.sectorMouseIsIn != this.lastSector)
