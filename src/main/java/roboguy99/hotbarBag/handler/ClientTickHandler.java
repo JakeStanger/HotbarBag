@@ -3,7 +3,9 @@ package roboguy99.hotbarBag.handler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 import roboguy99.hotbarBag.HotbarBag;
+import roboguy99.hotbarBag.item.ItemBag;
 import roboguy99.hotbarBag.network.ClientProxy;
 import roboguy99.hotbarBag.network.packet.InventoryUpdate;
 
@@ -37,7 +39,8 @@ public class ClientTickHandler
 			
 			if (this.pressedLastTick && !ClientProxy.keyHUD.getIsKeyPressed())
 			{
-				HotbarBag.networkWrapper.sendToServer(new InventoryUpdate(this.renderOverlayHandler.getMouseSector(), this.renderOverlayHandler.getInventory()));
+				if(!(minecraft.thePlayer.inventory.getStackInSlot(0).getItem() instanceof ItemBag)) HotbarBag.networkWrapper.sendToServer(new InventoryUpdate(this.renderOverlayHandler.getMouseSector(), this.renderOverlayHandler.getInventory()));
+				else minecraft.thePlayer.addChatMessage(new ChatComponentText("You cannot put a bag inside a bag!"));
 			}
 			this.pressedLastTick = ClientProxy.keyHUD.getIsKeyPressed();
 			
