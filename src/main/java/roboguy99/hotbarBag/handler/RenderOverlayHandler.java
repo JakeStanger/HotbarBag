@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -122,14 +123,17 @@ public class RenderOverlayHandler extends Gui
 							
 							// Play sound effect on sector change TODO Fix sound
 							// HotbarBag.logger.info("A " + this.sectorMouseIsIn + " " + this.lastSector);
-							if (this.sectorMouseIsIn != this.lastSector)
-							{
-								minecraft.theWorld.playSoundEffect(this.minecraft.thePlayer.posX, this.minecraft.thePlayer.posY, this.minecraft.thePlayer.posZ, "roboguy99:tick", 1, 1);
-							}
 							
-							this.lastSector = this.sectorMouseIsIn;
+						
 							// HotbarBag.logger.info("B " + this.sectorMouseIsIn + " " + this.lastSector);
 						}
+						
+						if (this.sectorMouseIsIn != this.lastSector)
+						{
+							System.out.println(this.sectorMouseIsIn + "  " + this.lastSector);
+							minecraft.getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("roboguy99:tick")));
+						}
+						this.lastSector = this.sectorMouseIsIn;
 						
 						GL11.glPushMatrix();
 						{
