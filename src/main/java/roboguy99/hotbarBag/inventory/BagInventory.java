@@ -190,21 +190,33 @@ public class BagInventory implements IInventory
 		
 		NBTTagList settings = compound.getTagList("Settings", NBT.TAG_COMPOUND);
 		
-		config.setBackgroundRed(settings.getCompoundTagAt(0).getInteger("backgroundRed"));
-		config.setBackgroundGreen(settings.getCompoundTagAt(0).getInteger("backgroundGreen"));
-		config.setBackgroundBlue(settings.getCompoundTagAt(0).getInteger("backgroundBlue"));
+		if(settings.getCompoundTagAt(0).hasKey("backgroundRed")) config.setBackgroundRed(settings.getCompoundTagAt(0).getInteger("backgroundRed")); 
+			else config.setBackgroundRed(config.DEFAULT_BACKGROUND_RED);
+		if(settings.getCompoundTagAt(0).hasKey("backgroundGreen")) config.setBackgroundGreen(settings.getCompoundTagAt(0).getInteger("backgroundGreen"));
+			else config.setBackgroundGreen(config.DEFAULT_BACKGROUND_GREEN);
+		if(settings.getCompoundTagAt(0).hasKey("backgroundBlue")) config.setBackgroundBlue(settings.getCompoundTagAt(0).getInteger("backgroundBlue"));
+			else config.setBackgroundBlue(config.DEFAULT_BACKGROUND_BLUE);
 		
-		config.setHighlightRed(settings.getCompoundTagAt(1).getInteger("highlightRed"));
-		config.setHighlightGreen(settings.getCompoundTagAt(1).getInteger("highlightGreen"));
-		config.setHighlightBlue(settings.getCompoundTagAt(1).getInteger("highlightBlue"));
+		if(settings.getCompoundTagAt(1).hasKey("highlightRed")) config.setHighlightRed(settings.getCompoundTagAt(1).getInteger("highlightRed"));
+			else config.setHighlightRed(config.DEFAULT_HIGHLIGHT_RED);
+		if(settings.getCompoundTagAt(1).hasKey("highlightGreen")) config.setHighlightGreen(settings.getCompoundTagAt(1).getInteger("highlightGreen"));
+			else config.setHighlightGreen(config.DEFAULT_HIGHLIGHT_GREEN);
+		if(settings.getCompoundTagAt(1).hasKey("highlightBlue")) config.setHighlightBlue(settings.getCompoundTagAt(1).getInteger("highlightBlue"));
+			else config.setHighlightBlue(config.DEFAULT_HIGHLIGHT_BLUE);
 		
-		config.setTriangles(settings.getCompoundTagAt(2).getInteger("triangles"));
-		config.setRadius(settings.getCompoundTagAt(2).getInteger("radius"));
-		config.setItemRadius(settings.getCompoundTagAt(2).getInteger("itemRadius"));
+		if(settings.getCompoundTagAt(2).hasKey("triangles")) config.setTriangles(settings.getCompoundTagAt(2).getInteger("triangles"));
+			else config.setTriangles(config.DEFAULT_TRIANGLES);
+		if(settings.getCompoundTagAt(2).hasKey("radius")) config.setRadius(settings.getCompoundTagAt(2).getInteger("radius"));
+			else config.setRadius(config.DEFAULT_RADIUS);
+		if(settings.getCompoundTagAt(2).hasKey("itemRadius")) config.setItemRadius(settings.getCompoundTagAt(2).getInteger("itemRadius"));
+			else config.setItemRadius(config.DEFAULT_ITEM_RADIUS);
 		
-		config.setUpdateItemRadiusAutomatic(settings.getCompoundTagAt(3).getBoolean("itemRadiusAuto"));
-		config.setMuted(settings.getCompoundTagAt(3).getBoolean("muted"));
-		config.setName(settings.getCompoundTagAt(3).getString("name"));
+		if(settings.getCompoundTagAt(3).hasKey("itemRadiusAuto")) config.setUpdateItemRadiusAutomatic(settings.getCompoundTagAt(3).getBoolean("itemRadiusAuto"));
+			else config.setUpdateItemRadiusAutomatic(config.DEFAULT_UPDATE_ITEMS_AUTO);
+		if(settings.getCompoundTagAt(3).hasKey("muted")) config.setMuted(settings.getCompoundTagAt(3).getBoolean("muted"));
+			else config.setMuted(config.DEFAULT_MUTE);
+		if(settings.getCompoundTagAt(3).hasKey("name")) config.setName(settings.getCompoundTagAt(3).getString("name"));
+			else config.setName(config.DEFAULT_NAME);
 		
 	}
 	
