@@ -46,7 +46,6 @@ public class InventoryUpdate implements IMessage
 		public IMessage onMessage(InventoryUpdate message, MessageContext ctx)
 		{
 			InventoryHelper.updateInventory(new BagInventory(ctx.getServerHandler().playerEntity.getHeldItem()), ctx.getServerHandler().playerEntity, message.sectorMouseIsIn);
-			HotbarBag.logger.info("Inventories successfully updated");
 			return null;
 		}
 	}
