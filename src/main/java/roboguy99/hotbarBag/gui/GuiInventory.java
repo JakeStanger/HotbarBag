@@ -19,7 +19,7 @@ public class GuiInventory extends GuiContainer
 {
 	private float xSize_lo, ySize_lo; // _lo to avoid conflict with existing super fields
 	
-	private static final ResourceLocation texture = new ResourceLocation("roboguy99", "textures/gui/inventory.png");
+	private static final ResourceLocation texture = new ResourceLocation("roboguy99", "textures/gui/Inventory.png");
 	
 	private final BagInventory inventory;
 	private final FontRenderer fontRenderer;
