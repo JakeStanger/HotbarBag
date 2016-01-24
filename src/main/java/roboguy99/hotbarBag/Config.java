@@ -19,7 +19,7 @@ public class Config
 	
 	private int backgroundRed, backgroundGreen, backgroundBlue, highlightRed, highlightGreen, highlightBlue, triangles, radius, itemRadius;
 	private boolean updateItemRadiusAutomatically, mute;
-	private String name;
+	private String name = this.DEFAULT_NAME;
 	
 	private final Configuration config;
 	
@@ -27,21 +27,21 @@ public class Config
 	{
 		this.config = new Configuration(event.getSuggestedConfigurationFile());
 		this.config.load();
-		
-		this.DEFAULT_BACKGROUND_RED = this.config.getInt("BackgroundRed", "Background Colours", 127, 0, 255, "RGB red value for selector background");
-		this.DEFAULT_BACKGROUND_GREEN = this.config.getInt("BackgroundGreen", "Background Colours", 127, 0, 255, "RGB green value for selector background");
-		this.DEFAULT_BACKGROUND_BLUE = this.config.getInt("BackgroundBlue", "Background Colours", 127, 0, 255, "RGB blue value for selector background");
-		
-		this.DEFAULT_HIGHLIGHT_RED = this.config.getInt("HighlightRed", "Highlight Colours", 0, 0, 255, "RGB red value for selector highlighted sector");
-		this.DEFAULT_HIGHLIGHT_GREEN = this.config.getInt("HighlightGreen", "Highlight Colours", 102, 0, 255, "RGB green value for selector highlighted sector");
-		this.DEFAULT_HIGHLIGHT_BLUE = this.config.getInt("HighlightBlue", "Highlight Colours", 153, 0, 255, "RGB blue value for selector highlighted sector");
-		
-		this.DEFAULT_TRIANGLES = this.config.getInt("Triangles", "Circle Settings", 20000, 10000, 100000, "Number of triangles used to draw circle. More triangles = higher definition = more lag");
-		this.DEFAULT_RADIUS = this.config.getInt("Radius", "Circle Settings", 100, 10, 120, "The radius of the circle");
-		this.DEFAULT_ITEM_RADIUS = this.config.getInt("ItemRadius", "Circle Settings", 85, 10, 120, "The radius of the items");
-		
-		this.DEFAULT_UPDATE_ITEMS_AUTO = this.config.getBoolean("AutoItemRadius", "General", true, "Update item radius automatically when radius is changed. You can still manually change both values.");
-		this.DEFAULT_MUTE = this.config.getBoolean("Mute", "General", false, "Mute the sound when moving the mouse between sectors");
+			this.DEFAULT_BACKGROUND_RED = this.config.getInt("BackgroundRed", "Background Colours", 127, 0, 255, "RGB red value for selector background");
+			this.DEFAULT_BACKGROUND_GREEN = this.config.getInt("BackgroundGreen", "Background Colours", 127, 0, 255, "RGB green value for selector background");
+			this.DEFAULT_BACKGROUND_BLUE = this.config.getInt("BackgroundBlue", "Background Colours", 127, 0, 255, "RGB blue value for selector background");
+			
+			this.DEFAULT_HIGHLIGHT_RED = this.config.getInt("HighlightRed", "Highlight Colours", 0, 0, 255, "RGB red value for selector highlighted sector");
+			this.DEFAULT_HIGHLIGHT_GREEN = this.config.getInt("HighlightGreen", "Highlight Colours", 102, 0, 255, "RGB green value for selector highlighted sector");
+			this.DEFAULT_HIGHLIGHT_BLUE = this.config.getInt("HighlightBlue", "Highlight Colours", 153, 0, 255, "RGB blue value for selector highlighted sector");
+			
+			this.DEFAULT_TRIANGLES = this.config.getInt("Triangles", "Circle Settings", 20000, 10000, 100000, "Number of triangles used to draw circle. More triangles = higher definition = more lag");
+			this.DEFAULT_RADIUS = this.config.getInt("Radius", "Circle Settings", 100, 10, 120, "The radius of the circle");
+			this.DEFAULT_ITEM_RADIUS = this.config.getInt("ItemRadius", "Circle Settings", 85, 10, 120, "The radius of the items");
+			
+			this.DEFAULT_UPDATE_ITEMS_AUTO = this.config.getBoolean("AutoItemRadius", "General", true, "Update item radius automatically when radius is changed. You can still manually change both values.");
+			this.DEFAULT_MUTE = this.config.getBoolean("Mute", "General", false, "Mute the sound when moving the mouse between sectors");
+		this.config.save();
 	}
 	
 	public void setAllValuesToDefault()
