@@ -1,12 +1,18 @@
 package roboguy99.hotbarBag.handler;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+
+import com.sun.xml.internal.messaging.saaj.soap.MultipartDataContentHandler;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -124,39 +130,79 @@ public class RenderOverlayHandler extends Gui
 						
 						if (this.sectorMouseIsIn != this.lastSector)
 						{
-							System.out.println(this.sectorMouseIsIn + "  " + this.lastSector);
 							minecraft.getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("roboguy99:tick")));
 						}
 						this.lastSector = this.sectorMouseIsIn;
 						
 						GL11.glPushMatrix();
 						{
-							
 							GL11.glDisable(GL11.GL_TEXTURE_2D);
-							GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 							{
-								GL11.glVertex2f(centreX, centreY);
-								for(int i = 0; i < inventoryContents.length; i++) // Draw circle
+								GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 								{
-									boolean drawHighlighted = false;
-									if (i == this.sectorMouseIsIn) drawHighlighted = true;
-									
-									for(double j = 0 + i * multiplier; j <= config.getTriangles() / inventoryContents.length + i * multiplier; j += 1) // Draw circle sector
+									GL11.glVertex2f(centreX, centreY);
+									for(int i = 0; i < inventoryContents.length; i++) // Draw circle
 									{
-										GL11.glColor4f(config.getBackgroundRed() / 255F, config.getBackgroundGreen() / 255F, config.getBackgroundBlue() / 255F, 0.6F);
+										boolean drawHighlighted = false;
+										if (i == this.sectorMouseIsIn) drawHighlighted = true;
 										
-										if (drawHighlighted) GL11.glColor4f(config.getHighlightRed() / 255F, config.getHighlightGreen() / 255F, config.getHighlightBlue() / 255F, 0.8F);
-										
-										double t = 2 * Math.PI * j / config.getTriangles();
-										
-										double drawX = centreX + Math.sin(t) * config.getRadius();
-										double drawY = centreY + Math.cos(t) * config.getRadius();
-										GL11.glVertex2d(drawX, drawY);
+										for(double j = 0 + i * multiplier; j <= config.getTriangles()  / inventoryContents.length + i * multiplier; j += 1) // Draw circle sector
+										{
+											GL11.glColor4f(config.getBackgroundRed() / 255F, config.getBackgroundGreen() / 255F, config.getBackgroundBlue() / 255F, 0.6F);
+											if (drawHighlighted) GL11.glColor4f(config.getHighlightRed() / 255F, config.getHighlightGreen() / 255F, config.getHighlightBlue() / 255F, 0.8F);
+											
+											double t = 2 * Math.PI * j / config.getTriangles();
+											
+											double drawX = centreX + Math.sin(t) * config.getRadius();
+											double drawY = centreY + Math.cos(t) * config.getRadius();
+											GL11.glVertex2d(drawX, drawY);
+										}
 									}
 								}
+								GL11.glEnd();
+								
+								GL11.glLineWidth(0.5f); 
+								GL11.glColor4f(1, 1, 1, 0.66f);   
+								GL11.glBegin(GL11.GL_LINE_LOOP);
+								{
+									
+									for (int i=0; i < 360; i++) GL11.glVertex2d(Math.cos(Math.toRadians(i))*config.getRadius() + centreX ,Math.sin(Math.toRadians(i))*config.getRadius() + centreY);
+
+								}
+							   GL11.glEnd();
+								
+								//Draw mouse position line
+								GL11.glLineWidth(1f); 
+								GL11.glColor4f(0, 0, 0, 0.66f);
+								GL11.glBegin(GL11.GL_LINES);
+								{
+									GL11.glVertex2f(centreX, centreY);
+									
+									double mouseLineX = config.getRadius()*-Math.cos((2*Math.PI)-Math.toRadians(mouseAngle+90)) + centreX;
+									double mouseLineY = config.getRadius()*-Math.sin((2*Math.PI)-Math.toRadians(mouseAngle+90)) + centreY;
+									
+									GL11.glVertex2d(mouseLineX, mouseLineY);
+								}
+								GL11.glEnd();
+								
 							}
-							GL11.glEnd();
 							GL11.glEnable(GL11.GL_TEXTURE_2D);
+							
+							
+							ItemStack highlightedItem = inventory.getStackInSlot(sectorMouseIsIn);
+							int textHeight = 0;
+							for(int i = 0; i < highlightedItem.getTooltip(minecraft.thePlayer, false).size(); i++)
+							{
+								String itemName = highlightedItem.getTooltip(minecraft.thePlayer, false).get(i).toString();
+								if(itemName != null && itemName != "")
+								{
+									textHeight += 10;
+									int textColour = i == 0 ? 0x66ff33 : (i == 1 ? 0xff00ff : 0x0000ff);
+									minecraft.fontRenderer.drawString(itemName, 10, textHeight, textColour);
+								}
+							}
+							
+							if(highlightedItem.getItem().getCreativeTab() != null) minecraft.fontRenderer.drawString(LanguageRegistry.instance().getStringLocalization(highlightedItem.getItem().getCreativeTab().getTranslatedTabLabel()), 10, textHeight + 10, 0xfafafa);
 						}
 						GL11.glPopMatrix();
 						
@@ -172,6 +218,7 @@ public class RenderOverlayHandler extends Gui
 							
 							this.renderItemIntoGUI(minecraft.fontRenderer, minecraft.getTextureManager(), inventoryContents[i], itemX, itemY, true);
 						}
+						
 					}
 					else if (sectors == 1) // If we only have 1 item...
 					{
@@ -244,31 +291,31 @@ public class RenderOverlayHandler extends Gui
 			}
 			
 			GL11.glPushMatrix();
-			GL11.glTranslatef((float) (x - 2), (float) (y + 3), -3.0F + this.zLevel);
-			GL11.glScalef(10.0F, 10.0F, 10.0F);
-			GL11.glTranslatef(1.0F, 0.5F, 1.0F);
-			GL11.glScalef(1.0F, 1.0F, -1.0F);
-			GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-			l = itemStack.getItem().getColorFromItemStack(itemStack, 0);
-			f3 = (l >> 16 & 255) / 255.0F;
-			f4 = (l >> 8 & 255) / 255.0F;
-			f = (l & 255) / 255.0F;
-			
-			if (this.renderWithColor)
-			{
-				GL11.glColor4f(f3, f4, f, 1.0F);
-			}
-			
-			GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-			this.renderBlocksRi.useInventoryTint = this.renderWithColor;
-			this.renderBlocksRi.renderBlockAsItem(block, k, 1.0F);
-			this.renderBlocksRi.useInventoryTint = true;
-			
-			if (block.getRenderBlockPass() == 0)
-			{
-				GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
-			}
+				GL11.glTranslatef((float) (x - 2), (float) (y + 3), -3.0F + this.zLevel);
+				GL11.glScalef(10.0F, 10.0F, 10.0F);
+				GL11.glTranslatef(1.0F, 0.5F, 1.0F);
+				GL11.glScalef(1.0F, 1.0F, -1.0F);
+				GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
+				GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
+				l = itemStack.getItem().getColorFromItemStack(itemStack, 0);
+				f3 = (l >> 16 & 255) / 255.0F;
+				f4 = (l >> 8 & 255) / 255.0F;
+				f = (l & 255) / 255.0F;
+				
+				if (this.renderWithColor)
+				{
+					GL11.glColor4f(f3, f4, f, 1.0F);
+				}
+				
+				GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+				this.renderBlocksRi.useInventoryTint = this.renderWithColor;
+				this.renderBlocksRi.renderBlockAsItem(block, k, 1.0F);
+				this.renderBlocksRi.useInventoryTint = true;
+				
+				if (block.getRenderBlockPass() == 0)
+				{
+					GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+				}
 			
 			GL11.glPopMatrix();
 		}
