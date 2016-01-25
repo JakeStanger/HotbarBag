@@ -51,6 +51,7 @@ public class GuiInventory extends GuiContainer
 		String s = this.inventory.hasCustomInventoryName() ? this.inventory.getInventoryName() : StatCollector.translateToLocal(this.inventory.getInventoryName()).trim();
 		this.fontRenderer.drawString(s, 8, 28, 4210752);
 		this.fontRenderer.drawString(StatCollector.translateToLocal("container.inventory").trim(), 8, this.ySize - 96 + 4, 4210752);
+		
 	}
 	
 	/**
@@ -58,7 +59,7 @@ public class GuiInventory extends GuiContainer
 	 */
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
-	{
+	{	
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(texture);
 		int k = (this.width - this.xSize) / 2;
