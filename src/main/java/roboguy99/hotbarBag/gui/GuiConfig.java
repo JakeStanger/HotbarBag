@@ -225,7 +225,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.txtName.setTextColor(-1);
 		this.txtName.setEnableBackgroundDrawing(true);
 		this.txtName.setMaxStringLength(30);
-		this.txtName.setText(this.config.DEFAULT_NAME);
+		this.txtName.setText(this.config.getName());
 		this.txtName.setFocused(true);
 		
 		this.loadPage(0); //Always start on the first screen
