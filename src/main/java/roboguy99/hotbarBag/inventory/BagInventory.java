@@ -262,55 +262,12 @@ public class BagInventory implements IInventory
 		compound.setTag("Inventory", items);
 	}
 	
-	public void writeSettingsToNBT(NBTTagCompound compound)
+	public void writeSettingsToNBT(NBTTagCompound itemCompound, NBTTagCompound constructCompound)
 	{
-		Config config = HotbarBag.instance.config; // Get config instance
-		
-		// Write item settings
-		NBTTagList settings = new NBTTagList();
-		
-		NBTTagCompound background = new NBTTagCompound();
-		NBTTagCompound highlight = new NBTTagCompound();
-		NBTTagCompound border = new NBTTagCompound();
-		NBTTagCompound mousepos = new NBTTagCompound();
-		NBTTagCompound circle = new NBTTagCompound();
-		NBTTagCompound general = new NBTTagCompound();
-		
-		background.setInteger("backgroundRed", config.getBackgroundRed());
-		background.setInteger("backgroundGreen", config.getBackgroundGreen());
-		background.setInteger("backgroundBlue", config.getBackgroundBlue());
-		background.setInteger("backgroundAlpha", config.getBackgroundAlpha());
-		
-		highlight.setInteger("highlightRed", config.getHighlightRed());
-		highlight.setInteger("highlightGreen", config.getHighlightGreen());
-		highlight.setInteger("highlightBlue", config.getHighlightBlue());
-		highlight.setInteger("highlightAlpha", config.getHighlightAlpha());
-		
-		border.setInteger("borderRed", config.getBorderRed());
-		border.setInteger("borderGreen", config.getBorderGreen());
-		border.setInteger("borderBlue", config.getBorderBlue());
-		border.setInteger("borderAlpha", config.getBorderAlpha());
-		
-		mousepos.setInteger("mouseposRed", config.getMouseposRed());
-		mousepos.setInteger("mouseposGreen", config.getMouseposGreen());
-		mousepos.setInteger("mouseposBlue", config.getMouseposBlue());
-		mousepos.setInteger("mouseposAlpha", config.getMouseposAlpha());
-		
-		circle.setInteger("triangles", config.getTriangles());
-		circle.setInteger("radius", config.getRadius());
-		circle.setInteger("itemRadius", config.getItemRadius());
-		
-		general.setBoolean("itemRadiusAuto", config.isUpdateItemRadiusAutomatic());
-		general.setBoolean("muted", config.isMuted());
-		general.setString("name", config.getName());
-		
-		settings.appendTag(background);
-		settings.appendTag(highlight);
-		settings.appendTag(border);
-		settings.appendTag(mousepos);
-		settings.appendTag(circle);
-		settings.appendTag(general);
-		
-		compound.setTag("Settings", settings);
+		System.out.println(itemCompound);
+		System.out.println(constructCompound);
+		itemCompound = constructCompound;
+		System.out.println(itemCompound);
+		System.out.println(constructCompound);
 	}
 }

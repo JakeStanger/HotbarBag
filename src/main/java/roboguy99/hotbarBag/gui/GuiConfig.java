@@ -6,11 +6,12 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.client.config.GuiSlider.ISlider;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import roboguy99.hotbarBag.Config;
 import roboguy99.hotbarBag.HotbarBag;
@@ -329,7 +330,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 			this.btnReset.enabled = false;
 			
 			this.config.setAllValuesToDefault();
-			HotbarBag.networkWrapper.sendToServer(new SettingsUpdate()); // We only wan't to write, updating would undo the defaults
+			HotbarBag.networkWrapper.sendToServer(new SettingsUpdate(this.heldItem.getTagCompound(), this.constructNBTTagCompound())); // We only wan't to write, updating would undo the defaults
 			
 			this.updateSliders();
 			this.txtName.setText(this.config.DEFAULT_NAME);
@@ -375,7 +376,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 		
 		this.config.setName(this.txtName.getText());
 		
-		HotbarBag.networkWrapper.sendToServer(new SettingsUpdate());
+		HotbarBag.networkWrapper.sendToServer(new SettingsUpdate(this.heldItem.getTagCompound(), this.constructNBTTagCompound()));
 	}
 	
 	/**
@@ -504,6 +505,60 @@ public class GuiConfig extends GuiScreen implements ISlider
 			else this.btnNext.enabled = true;
 		if (this.pageNum == 0) this.btnPrev.enabled = false;
 			else this.btnPrev.enabled = true;
+	}
+	
+	private NBTTagCompound constructNBTTagCompound()
+	{
+		NBTTagCompound compound = new NBTTagCompound();
+		
+		// Write item settings
+		NBTTagList settings = new NBTTagList();
+		
+		NBTTagCompound background = new NBTTagCompound();
+		NBTTagCompound highlight = new NBTTagCompound();
+		NBTTagCompound border = new NBTTagCompound();
+		NBTTagCompound mousepos = new NBTTagCompound();
+		NBTTagCompound circle = new NBTTagCompound();
+		NBTTagCompound general = new NBTTagCompound();
+		
+		background.setInteger("backgroundRed", config.getBackgroundRed());
+		background.setInteger("backgroundGreen", config.getBackgroundGreen());
+		background.setInteger("backgroundBlue", config.getBackgroundBlue());
+		background.setInteger("backgroundAlpha", config.getBackgroundAlpha());
+		
+		highlight.setInteger("highlightRed", config.getHighlightRed());
+		highlight.setInteger("highlightGreen", config.getHighlightGreen());
+		highlight.setInteger("highlightBlue", config.getHighlightBlue());
+		highlight.setInteger("highlightAlpha", config.getHighlightAlpha());
+		
+		border.setInteger("borderRed", config.getBorderRed());
+		border.setInteger("borderGreen", config.getBorderGreen());
+		border.setInteger("borderBlue", config.getBorderBlue());
+		border.setInteger("borderAlpha", config.getBorderAlpha());
+		
+		mousepos.setInteger("mouseposRed", config.getMouseposRed());
+		mousepos.setInteger("mouseposGreen", config.getMouseposGreen());
+		mousepos.setInteger("mouseposBlue", config.getMouseposBlue());
+		mousepos.setInteger("mouseposAlpha", config.getMouseposAlpha());
+		
+		circle.setInteger("triangles", config.getTriangles());
+		circle.setInteger("radius", config.getRadius());
+		circle.setInteger("itemRadius", config.getItemRadius());
+		
+		general.setBoolean("itemRadiusAuto", config.isUpdateItemRadiusAutomatic());
+		general.setBoolean("muted", config.isMuted());
+		general.setString("name", config.getName());
+		
+		settings.appendTag(background);
+		settings.appendTag(highlight);
+		settings.appendTag(border);
+		settings.appendTag(mousepos);
+		settings.appendTag(circle);
+		settings.appendTag(general);
+		
+		compound.setTag("Settings", settings);
+		
+		return compound;
 	}
 	
 	@Override
