@@ -1,10 +1,13 @@
 package roboguy99.hotbarBag.handler;
 
+import java.awt.Color;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import roboguy99.hotbarBag.HotbarBag;
 import roboguy99.hotbarBag.item.ItemBag;
 import roboguy99.hotbarBag.network.ClientProxy;
@@ -42,9 +45,10 @@ public class ClientTickHandler
 			if (this.pressedLastTick && !ClientProxy.keyHUD.getIsKeyPressed())
 			{
 				if(player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemBag) //TODO Tidy this
-				{
+				{	
 					if(!(player.inventory.getStackInSlot(0) != null && player.inventory.getStackInSlot(0).getItem() instanceof ItemBag)) HotbarBag.networkWrapper.sendToServer(new InventoryUpdate(this.renderOverlayHandler.getMouseSector(), this.renderOverlayHandler.getInventory()));
-					else player.addChatMessage(new ChatComponentText("Infinite storage is *just* a bit overpowered, don't you think?")); //TODO Make this only appear once maybe
+					else if(!(player.inventory.getStackInSlot(0) == player.getHeldItem()))player.addChatMessage(new ChatComponentText("Infinite storage is just a " + EnumChatFormatting.RED + "*little bit*" + EnumChatFormatting.WHITE + " overpowered, don't you think?")); //TODO Make this only appear once maybe
+					else player.addChatMessage(new ChatComponentText("Please move the bag from hotbar slot 1"));
 				}
 			}
 			this.pressedLastTick = ClientProxy.keyHUD.getIsKeyPressed();
