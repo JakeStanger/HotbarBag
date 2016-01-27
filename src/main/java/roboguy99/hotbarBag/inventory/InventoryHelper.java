@@ -55,7 +55,5 @@ public class InventoryHelper
 			entityPlayer.inventory.setInventorySlotContents(0, HUDStack);
 			entityPlayer.inventory.markDirty();
 		}
-		else
-			entityPlayer.addChatMessage(new ChatComponentText("Please move the bag from hotbar slot 1"));
 	}
 }

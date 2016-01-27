@@ -373,6 +373,8 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.config.setRadius(this.sldRadius.getValueInt());
 		this.config.setItemRadius(this.sldItemRadius.getValueInt());
 		
+		this.config.setName(this.txtName.getText());
+		
 		HotbarBag.networkWrapper.sendToServer(new SettingsUpdate());
 	}
 	
