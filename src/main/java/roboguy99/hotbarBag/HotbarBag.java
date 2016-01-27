@@ -13,7 +13,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import roboguy99.hotbarBag.handler.ClientTickHandler;
@@ -37,7 +41,7 @@ public class HotbarBag
 {
 	// Mod data. Fallback if mc-mod.info fails to load.
 	public static final String modID = "HotbarBag";
-	public static final String modVersion = "1.0.4";
+	public static final String modVersion = "1.1.0";
 	public static final String name = "Hotbar Bag";
 	
 	public static final Logger logger = LogManager.getLogger("Hotbar Bag");
