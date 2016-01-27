@@ -1,14 +1,10 @@
 package roboguy99.hotbarBag.handler;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-
-import com.sun.xml.internal.messaging.saaj.soap.MultipartDataContentHandler;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -53,7 +49,7 @@ public class RenderOverlayHandler extends Gui
 	// Special values for custom item rendering code
 	private final RenderBlocks renderBlocksRi = new RenderBlocks();
 	private final boolean renderWithColor = true;
-	private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+	private static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("roboguy99", "textures/misc/enchanted_item_glint.png");
 	
 	private int sectorMouseIsIn = 0;
 	private int lastSector = this.sectorMouseIsIn;
@@ -128,9 +124,11 @@ public class RenderOverlayHandler extends Gui
 							if (startAngle < mouseAngle && mouseAngle < endAngle) this.sectorMouseIsIn = i;
 						}
 						
-						if (this.sectorMouseIsIn != this.lastSector)
+						if (this.sectorMouseIsIn != this.lastSector && !config.isMuted())
 						{
-							minecraft.getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("roboguy99:tick")));
+							PositionedSoundRecord sound = PositionedSoundRecord.func_147673_a(new ResourceLocation("roboguy99:tick"));
+							minecraft.getSoundHandler().stopSound(sound); //TODO stop sound stacking
+							minecraft.getSoundHandler().playSound(sound);
 						}
 						this.lastSector = this.sectorMouseIsIn;
 						
@@ -146,10 +144,22 @@ public class RenderOverlayHandler extends Gui
 										boolean drawHighlighted = false;
 										if (i == this.sectorMouseIsIn) drawHighlighted = true;
 										
+										boolean renderEffect = inventoryContents[i].hasEffect(0);
+										
+										
 										for(double j = 0 + i * multiplier; j <= config.getTriangles()  / inventoryContents.length + i * multiplier; j += 1) // Draw circle sector
 										{
-											GL11.glColor4f(config.getBackgroundRed() / 255F, config.getBackgroundGreen() / 255F, config.getBackgroundBlue() / 255F, config.getBackgroundAlpha() / 100F);
-											if (drawHighlighted) GL11.glColor4f(config.getHighlightRed() / 255F, config.getHighlightGreen() / 255F, config.getHighlightBlue() / 255F, config.getHighlightAlpha() / 100F);
+											if(!renderEffect) //Solid colour
+											{
+												GL11.glColor4f(config.getBackgroundRed() / 255F, config.getBackgroundGreen() / 255F, config.getBackgroundBlue() / 255F, config.getBackgroundAlpha() / 100F);
+												if (drawHighlighted) GL11.glColor4f(config.getHighlightRed() / 255F, config.getHighlightGreen() / 255F, config.getHighlightBlue() / 255F, config.getHighlightAlpha() / 100F);
+											}
+											else //Several colours for enchanted item
+											{
+												Random random = new Random();
+												GL11.glColor4f(config.getBackgroundRed() / 255F + (random.nextBoolean() ? 0.0F : -0.1F), config.getBackgroundGreen() / 255F + ((random.nextBoolean() ? 0.1F : -0.1F)), config.getBackgroundBlue() / 255F + (random.nextBoolean() ? 0.1F : -0.1F), config.getBackgroundAlpha() / 100F);
+												if (drawHighlighted) GL11.glColor4f(config.getHighlightRed() / 255F + (random.nextBoolean() ? 0.1F : -0.1F), config.getHighlightGreen() / 255F + ((random.nextBoolean() ? 0.1F : -0.1F)), config.getHighlightBlue() / 255F + (random.nextBoolean() ? 0.1F : -0.1F), config.getHighlightAlpha() / 100F);
+											}
 											
 											double t = 2 * Math.PI * j / config.getTriangles();
 											
@@ -172,7 +182,8 @@ public class RenderOverlayHandler extends Gui
 								}
 							   GL11.glEnd();
 								
-								//Draw mouse position line
+								//Draw mouse position line 
+							   //double j = 0 + i * multiplier; j <= config.getTriangles()  / inventoryContents.length + i * multiplier; j += 1
 								GL11.glLineWidth(1f); 
 								GL11.glColor4f(config.getMouseposRed() / 255F, config.getMouseposGreen() / 255F, config.getMouseposBlue() / 255F, config.getMouseposAlpha() / 100F);
 								GL11.glBegin(GL11.GL_LINES);
@@ -205,8 +216,8 @@ public class RenderOverlayHandler extends Gui
 							
 							if(highlightedItem.getItem().getCreativeTab() != null) minecraft.fontRenderer.drawString(LanguageRegistry.instance().getStringLocalization(highlightedItem.getItem().getCreativeTab().getTranslatedTabLabel()), 10, textHeight + 10, 0xfafafa);
 						}
-						GL11.glPopMatrix();
 						
+						GL11.glDisable(GL11.GL_LIGHTING);
 						double radiansPerSector = 2 * Math.PI / inventoryContents.length;
 						double offset = 0 - (Math.PI / 2 + radiansPerSector / 2) + radiansPerSector;
 						
@@ -217,9 +228,10 @@ public class RenderOverlayHandler extends Gui
 							double itemX = config.getItemRadius() * Math.cos(radians) + centreX - TEXTURE_HALF_SIZE; // 8 = offset for texture centre
 							double itemY = config.getItemRadius() * Math.sin(radians) + centreY - TEXTURE_HALF_SIZE;
 							
-							this.renderItemIntoGUI(minecraft.fontRenderer, minecraft.getTextureManager(), inventoryContents[i], itemX, itemY, true);
+							this.renderItemIntoGUI(minecraft.fontRenderer, minecraft.getTextureManager(), inventoryContents[i], itemX, itemY);
 						}
-						
+						GL11.glEnable(GL11.GL_LIGHTING);
+						GL11.glPopMatrix();
 					}
 					else if (sectors == 1) // If we only have 1 item...
 					{
@@ -264,7 +276,7 @@ public class RenderOverlayHandler extends Gui
 	 * @param y
 	 * @param renderEffect
 	 */
-	public void renderItemIntoGUI(FontRenderer fontRenderer, TextureManager textureManager, ItemStack itemStack, double x, double y, boolean renderEffect)
+	public void renderItemIntoGUI(FontRenderer fontRenderer, TextureManager textureManager, ItemStack itemStack, double x, double y)
 	{
 		final int k = itemStack.getItemDamage();
 		Object object = itemStack.getIconIndex();
@@ -370,10 +382,6 @@ public class RenderOverlayHandler extends Gui
 				GL11.glDisable(GL11.GL_ALPHA_TEST);
 				GL11.glEnable(GL11.GL_LIGHTING);
 				
-				if (renderEffect && itemStack.hasEffect(l))
-				{
-					this.renderEffect(textureManager, x, y);
-				}
 			}
 			
 			GL11.glEnable(GL11.GL_LIGHTING);
@@ -410,11 +418,6 @@ public class RenderOverlayHandler extends Gui
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
 			GL11.glDisable(GL11.GL_BLEND);
-			
-			if (renderEffect && itemStack.hasEffect(0))
-			{
-				this.renderEffect(textureManager, x, y);
-			}
 			GL11.glEnable(GL11.GL_LIGHTING);
 		}
 		
@@ -439,64 +442,5 @@ public class RenderOverlayHandler extends Gui
 		tessellator.addVertexWithUV(x + width, y + 0, this.zLevel, icon.getMaxU(), icon.getMinV());
 		tessellator.addVertexWithUV(x + 0, y + 0, this.zLevel, icon.getMinU(), icon.getMinV());
 		tessellator.draw();
-	}
-	
-	/**
-	 * Taken from RenderItem and changed to accept doubles rather than integers for more accurate icon placement
-	 * 
-	 * @param manager
-	 * @param x
-	 * @param y
-	 */
-	public void renderEffect(TextureManager manager, double x, double y)
-	{
-		GL11.glDepthFunc(GL11.GL_EQUAL);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDepthMask(false);
-		manager.bindTexture(RES_ITEM_GLINT);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glColor4f(0.5F, 0.25F, 0.8F, 1.0F);
-		this.renderGlint(x * 431278612 + y * 32178161, x - 2, y - 2, 20, 20);
-		GL11.glDepthMask(true);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
-	}
-	
-	/**
-	 * Taken from RenderItem and changed to accept doubles rather than integers for more accurate icon placement
-	 * 
-	 * @param d
-	 * @param e
-	 * @param g
-	 * @param p_77018_4_
-	 * @param p_77018_5_
-	 */
-	private void renderGlint(double d, double e, double g, int p_77018_4_, int p_77018_5_)
-	{
-		for(int j1 = 0; j1 < 2; ++j1)
-		{
-			OpenGlHelper.glBlendFunc(772, 1, 0, 0);
-			final float f = 0.00390625F;
-			final float f1 = 0.00390625F;
-			final float f2 = Minecraft.getSystemTime() % (3000 + j1 * 1873) / (3000.0F + j1 * 1873) * 256.0F;
-			final float f3 = 0.0F;
-			final Tessellator tessellator = Tessellator.instance;
-			float f4 = 4.0F;
-			
-			if (j1 == 1)
-			{
-				f4 = -1.0F;
-			}
-			
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(e + 0, g + p_77018_5_, this.zLevel, (f2 + p_77018_5_ * f4) * f, (f3 + p_77018_5_) * f1);
-			tessellator.addVertexWithUV(e + p_77018_4_, g + p_77018_5_, this.zLevel, (f2 + p_77018_4_ + p_77018_5_ * f4) * f, (f3 + p_77018_5_) * f1);
-			tessellator.addVertexWithUV(e + p_77018_4_, g + 0, this.zLevel, (f2 + p_77018_4_) * f, (f3 + 0.0F) * f1);
-			tessellator.addVertexWithUV(e + 0, g + 0, this.zLevel, (f2 + 0.0F) * f, (f3 + 0.0F) * f1);
-			tessellator.draw();
-		}
 	}
 }
