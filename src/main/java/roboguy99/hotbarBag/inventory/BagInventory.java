@@ -196,6 +196,8 @@ public class BagInventory implements IInventory
 			else config.setBackgroundGreen(config.DEFAULT_BACKGROUND_GREEN);
 		if(settings.getCompoundTagAt(0).hasKey("backgroundBlue")) config.setBackgroundBlue(settings.getCompoundTagAt(0).getInteger("backgroundBlue"));
 			else config.setBackgroundBlue(config.DEFAULT_BACKGROUND_BLUE);
+		if(settings.getCompoundTagAt(0).hasKey("backgroundAlpha")) config.setBackgroundAlpha(settings.getCompoundTagAt(0).getInteger("backgroundAlpha"));
+			else config.setBackgroundAlpha(config.DEFAULT_BACKGROUND_ALPHA);
 		
 		if(settings.getCompoundTagAt(1).hasKey("highlightRed")) config.setHighlightRed(settings.getCompoundTagAt(1).getInteger("highlightRed"));
 			else config.setHighlightRed(config.DEFAULT_HIGHLIGHT_RED);
@@ -203,19 +205,39 @@ public class BagInventory implements IInventory
 			else config.setHighlightGreen(config.DEFAULT_HIGHLIGHT_GREEN);
 		if(settings.getCompoundTagAt(1).hasKey("highlightBlue")) config.setHighlightBlue(settings.getCompoundTagAt(1).getInteger("highlightBlue"));
 			else config.setHighlightBlue(config.DEFAULT_HIGHLIGHT_BLUE);
+		if(settings.getCompoundTagAt(1).hasKey("highlightAlpha")) config.setHighlightAlpha(settings.getCompoundTagAt(1).getInteger("highlightAlpha"));
+			else config.setHighlightAlpha(config.DEFAULT_HIGHLIGHT_ALPHA);
 		
-		if(settings.getCompoundTagAt(2).hasKey("triangles")) config.setTriangles(settings.getCompoundTagAt(2).getInteger("triangles"));
+		if(settings.getCompoundTagAt(2).hasKey("borderRed")) config.setBorderRed(settings.getCompoundTagAt(2).getInteger("borderRed")); 
+			else config.setBorderRed(config.DEFAULT_BORDER_RED);
+		if(settings.getCompoundTagAt(2).hasKey("borderGreen")) config.setBorderGreen(settings.getCompoundTagAt(2).getInteger("borderGreen"));
+			else config.setBorderGreen(config.DEFAULT_BORDER_GREEN);
+		if(settings.getCompoundTagAt(2).hasKey("borderBlue")) config.setBorderBlue(settings.getCompoundTagAt(2).getInteger("borderBlue"));
+			else config.setBorderBlue(config.DEFAULT_BORDER_BLUE);
+		if(settings.getCompoundTagAt(2).hasKey("borderAlpha")) config.setBorderAlpha(settings.getCompoundTagAt(2).getInteger("borderAlpha"));
+			else config.setBorderAlpha(config.DEFAULT_BORDER_ALPHA);
+	
+		if(settings.getCompoundTagAt(3).hasKey("mouseposRed")) config.setMouseposRed(settings.getCompoundTagAt(3).getInteger("mouseposRed"));
+			else config.setMouseposRed(config.DEFAULT_MOUSEPOS_RED);
+		if(settings.getCompoundTagAt(3).hasKey("mouseposGreen")) config.setMouseposGreen(settings.getCompoundTagAt(3).getInteger("mouseposGreen"));
+			else config.setMouseposGreen(config.DEFAULT_MOUSEPOS_GREEN);
+		if(settings.getCompoundTagAt(3).hasKey("mouseposBlue")) config.setMouseposBlue(settings.getCompoundTagAt(3).getInteger("mouseposBlue"));
+			else config.setMouseposBlue(config.DEFAULT_MOUSEPOS_BLUE);
+		if(settings.getCompoundTagAt(3).hasKey("mouseposAlpha")) config.setMouseposAlpha(settings.getCompoundTagAt(3).getInteger("mouseposAlpha"));
+			else config.setBackgroundAlpha(config.DEFAULT_MOUSEPOS_ALPHA);
+		
+		if(settings.getCompoundTagAt(4).hasKey("triangles")) config.setTriangles(settings.getCompoundTagAt(4).getInteger("triangles"));
 			else config.setTriangles(config.DEFAULT_TRIANGLES);
-		if(settings.getCompoundTagAt(2).hasKey("radius")) config.setRadius(settings.getCompoundTagAt(2).getInteger("radius"));
+		if(settings.getCompoundTagAt(4).hasKey("radius")) config.setRadius(settings.getCompoundTagAt(4).getInteger("radius"));
 			else config.setRadius(config.DEFAULT_RADIUS);
-		if(settings.getCompoundTagAt(2).hasKey("itemRadius")) config.setItemRadius(settings.getCompoundTagAt(2).getInteger("itemRadius"));
+		if(settings.getCompoundTagAt(4).hasKey("itemRadius")) config.setItemRadius(settings.getCompoundTagAt(4).getInteger("itemRadius"));
 			else config.setItemRadius(config.DEFAULT_ITEM_RADIUS);
 		
-		if(settings.getCompoundTagAt(3).hasKey("itemRadiusAuto")) config.setUpdateItemRadiusAutomatic(settings.getCompoundTagAt(3).getBoolean("itemRadiusAuto"));
+		if(settings.getCompoundTagAt(5).hasKey("itemRadiusAuto")) config.setUpdateItemRadiusAutomatic(settings.getCompoundTagAt(5).getBoolean("itemRadiusAuto"));
 			else config.setUpdateItemRadiusAutomatic(config.DEFAULT_UPDATE_ITEMS_AUTO);
-		if(settings.getCompoundTagAt(3).hasKey("muted")) config.setMuted(settings.getCompoundTagAt(3).getBoolean("muted"));
+		if(settings.getCompoundTagAt(5).hasKey("muted")) config.setMuted(settings.getCompoundTagAt(5).getBoolean("muted"));
 			else config.setMuted(config.DEFAULT_MUTE);
-		if(settings.getCompoundTagAt(3).hasKey("name")) config.setName(settings.getCompoundTagAt(3).getString("name"));
+		if(settings.getCompoundTagAt(5).hasKey("name")) config.setName(settings.getCompoundTagAt(5).getString("name"));
 			else config.setName(config.DEFAULT_NAME);
 		
 	}
@@ -249,16 +271,30 @@ public class BagInventory implements IInventory
 		
 		NBTTagCompound background = new NBTTagCompound();
 		NBTTagCompound highlight = new NBTTagCompound();
+		NBTTagCompound border = new NBTTagCompound();
+		NBTTagCompound mousepos = new NBTTagCompound();
 		NBTTagCompound circle = new NBTTagCompound();
 		NBTTagCompound general = new NBTTagCompound();
 		
 		background.setInteger("backgroundRed", config.getBackgroundRed());
 		background.setInteger("backgroundGreen", config.getBackgroundGreen());
 		background.setInteger("backgroundBlue", config.getBackgroundBlue());
+		background.setInteger("backgroundAlpha", config.getBackgroundAlpha());
 		
 		highlight.setInteger("highlightRed", config.getHighlightRed());
 		highlight.setInteger("highlightGreen", config.getHighlightGreen());
 		highlight.setInteger("highlightBlue", config.getHighlightBlue());
+		highlight.setInteger("highlightAlpha", config.getHighlightAlpha());
+		
+		border.setInteger("borderRed", config.getBorderRed());
+		border.setInteger("borderGreen", config.getBorderGreen());
+		border.setInteger("borderBlue", config.getBorderBlue());
+		border.setInteger("borderAlpha", config.getBorderAlpha());
+		
+		mousepos.setInteger("mouseposRed", config.getMouseposRed());
+		mousepos.setInteger("mouseposGreen", config.getMouseposGreen());
+		mousepos.setInteger("mouseposBlue", config.getMouseposBlue());
+		mousepos.setInteger("mouseposAlpha", config.getMouseposAlpha());
 		
 		circle.setInteger("triangles", config.getTriangles());
 		circle.setInteger("radius", config.getRadius());
@@ -270,6 +306,8 @@ public class BagInventory implements IInventory
 		
 		settings.appendTag(background);
 		settings.appendTag(highlight);
+		settings.appendTag(border);
+		settings.appendTag(mousepos);
 		settings.appendTag(circle);
 		settings.appendTag(general);
 		
