@@ -148,8 +148,8 @@ public class RenderOverlayHandler extends Gui
 										
 										for(double j = 0 + i * multiplier; j <= config.getTriangles()  / inventoryContents.length + i * multiplier; j += 1) // Draw circle sector
 										{
-											GL11.glColor4f(config.getBackgroundRed() / 255F, config.getBackgroundGreen() / 255F, config.getBackgroundBlue() / 255F, 0.6F);
-											if (drawHighlighted) GL11.glColor4f(config.getHighlightRed() / 255F, config.getHighlightGreen() / 255F, config.getHighlightBlue() / 255F, 0.8F);
+											GL11.glColor4f(config.getBackgroundRed() / 255F, config.getBackgroundGreen() / 255F, config.getBackgroundBlue() / 255F, config.getBackgroundAlpha() / 100F);
+											if (drawHighlighted) GL11.glColor4f(config.getHighlightRed() / 255F, config.getHighlightGreen() / 255F, config.getHighlightBlue() / 255F, config.getHighlightAlpha() / 100F);
 											
 											double t = 2 * Math.PI * j / config.getTriangles();
 											
@@ -161,8 +161,9 @@ public class RenderOverlayHandler extends Gui
 								}
 								GL11.glEnd();
 								
-								GL11.glLineWidth(0.5f); 
-								GL11.glColor4f(1, 1, 1, 0.66f);   
+								//Draw border
+								GL11.glLineWidth(2f); 
+								GL11.glColor4f(config.getBorderRed() / 255F, config.getBorderGreen() / 255F, config.getBorderBlue() / 255F, config.getBorderAlpha() / 100F);   
 								GL11.glBegin(GL11.GL_LINE_LOOP);
 								{
 									
@@ -173,7 +174,7 @@ public class RenderOverlayHandler extends Gui
 								
 								//Draw mouse position line
 								GL11.glLineWidth(1f); 
-								GL11.glColor4f(0, 0, 0, 0.66f);
+								GL11.glColor4f(config.getMouseposRed() / 255F, config.getMouseposGreen() / 255F, config.getMouseposBlue() / 255F, config.getMouseposAlpha() / 100F);
 								GL11.glBegin(GL11.GL_LINES);
 								{
 									GL11.glVertex2f(centreX, centreY);
