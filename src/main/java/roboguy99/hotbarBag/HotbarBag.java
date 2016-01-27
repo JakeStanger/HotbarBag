@@ -41,7 +41,7 @@ public class HotbarBag
 {
 	// Mod data. Fallback if mc-mod.info fails to load.
 	public static final String modID = "HotbarBag";
-	public static final String modVersion = "1.1.0";
+	public static final String modVersion = "1.1.1";
 	public static final String name = "Hotbar Bag";
 	
 	public static final Logger logger = LogManager.getLogger("Hotbar Bag");
