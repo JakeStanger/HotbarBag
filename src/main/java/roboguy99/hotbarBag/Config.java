@@ -1,7 +1,9 @@
 package roboguy99.hotbarBag;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.ForgeEventFactory;
 
 /**
  * Configuration file loading and in-game settings holder.
@@ -19,7 +21,7 @@ public class Config
 	
 	public final boolean DEFAULT_MUTE, DEFAULT_UPDATE_ITEMS_AUTO;
 	
-	public final String DEFAULT_NAME = "Roboguy99's Hotbar Bag #1"; // This does not need to be configured TODO Append player's name & maybe number
+	public final String DEFAULT_NAME = "Hotbar Bag"; // This does not need to be configured TODO Append player's name & maybe number
 	
 	private int backgroundRed, backgroundGreen, backgroundBlue, backgroundAlpha;
 	private int highlightRed, highlightGreen, highlightBlue, highlightAlpha;
@@ -62,7 +64,7 @@ public class Config
 			this.DEFAULT_BORDER_RED = this.config.getInt("BorderRed", "Border Colours", 70, 0, 255, "RGB red value for selector border");
 			this.DEFAULT_BORDER_GREEN = this.config.getInt("BorderGreen", "Border Colours", 70, 0, 255, "RGB green value for selector border");
 			this.DEFAULT_BORDER_BLUE = this.config.getInt("BorderBlue", "Border Colours", 70, 0, 255, "RGB blue value for selector border");
-			this.DEFAULT_BORDER_ALPHA = this.config.getInt("BorderAlpha", "Border Colours", 100, 0, 10, "Transparency option for selector border (0 = completely transparent)");
+			this.DEFAULT_BORDER_ALPHA = this.config.getInt("BorderAlpha", "Border Colours", 100, 0, 100, "Transparency option for selector border (0 = completely transparent)");
 			
 			this.DEFAULT_MOUSEPOS_RED = this.config.getInt("MouseposRed", "Mousepos Colours", 222, 0, 255, "RGB red value for selector mouse position indicator");
 			this.DEFAULT_MOUSEPOS_GREEN = this.config.getInt("MouseposGreen", "Mousepos Colours", 0, 0, 255, "RGB green value for selector mouse position indicator");
