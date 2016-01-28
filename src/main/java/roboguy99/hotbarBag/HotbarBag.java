@@ -28,7 +28,7 @@ import roboguy99.hotbarBag.network.CommonProxy;
 import roboguy99.hotbarBag.network.packet.InventoryUpdate;
 import roboguy99.hotbarBag.network.packet.InventoryUpdate.InventoryHandle;
 import roboguy99.hotbarBag.network.packet.SettingsUpdate;
-import roboguy99.hotbarBag.network.packet.SettingsUpdate.SettingsHandle;
+import roboguy99.hotbarBag.network.packet.SettingsUpdate.SettingsUpdateHandle;
 
 /**
  * Main class. Handles mod initialisation.
@@ -73,7 +73,7 @@ public class HotbarBag
 		
 		this.networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("hotbarBag_inv");
 		this.networkWrapper.registerMessage(InventoryHandle.class, InventoryUpdate.class, 0, Side.SERVER);
-		this.networkWrapper.registerMessage(SettingsHandle.class, SettingsUpdate.class, 1, Side.SERVER);
+		this.networkWrapper.registerMessage(SettingsUpdateHandle.class, SettingsUpdate.class, 1, Side.SERVER);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new CommonProxy());
 		

@@ -42,7 +42,7 @@ public class SettingsUpdate implements IMessage
 		ByteBufUtils.writeTag(buf, this.constructTag);
 	}
 
-	public static class SettingsHandle implements IMessageHandler<SettingsUpdate, IMessage>
+	public static class SettingsUpdateHandle implements IMessageHandler<SettingsUpdate, IMessage>
 	{
 		@Override
 		public IMessage onMessage(SettingsUpdate message, MessageContext ctx) 
