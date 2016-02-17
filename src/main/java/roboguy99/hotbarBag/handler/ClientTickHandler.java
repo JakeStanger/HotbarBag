@@ -32,7 +32,7 @@ public class ClientTickHandler
 	}
 	
 	@SubscribeEvent
-	public void onClientTick(TickEvent.ClientTickEvent event)
+	public void onClientTick(TickEvent.ClientTickEvent event) //TODO Tidy this to use RenderOverlayHandler.getIsDisplayed()
 	{
 		Minecraft minecraft = Minecraft.getMinecraft();
 		EntityPlayer player = minecraft.thePlayer;
@@ -53,7 +53,7 @@ public class ClientTickHandler
 			}
 			this.pressedLastTick = ClientProxy.keyHUD.getIsKeyPressed();
 			
-			if(this.firstTick && player.getHeldItem() != null) this.renderOverlayHandler.getInventory().readSettingsFromNBT(player.getHeldItem().getTagCompound());
+			//if(this.firstTick && player.getHeldItem() != null) this.renderOverlayHandler.getInventory().readSettingsFromNBT(player.getHeldItem().getTagCompound());
 		}
 	}
 }

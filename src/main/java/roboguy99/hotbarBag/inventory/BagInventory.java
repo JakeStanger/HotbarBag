@@ -23,13 +23,14 @@ public class BagInventory implements IInventory
 	private final ItemStack invItem;
 	ItemStack[] inventory = new ItemStack[SIZE];
 	
+	private NBTTagCompound compound;
+	
 	public BagInventory(ItemStack itemStack)
 	{
 		this.invItem = itemStack;
-		//this.readSettingsFromNBT(itemStack.getTagCompound());
 		
 		// If for any reason the itemstack has no NBT data
-		if (itemStack != null && !itemStack.hasTagCompound()) // Sometimes if you're too fast the held item returns null when it isn't
+		if (itemStack != null && !itemStack.hasTagCompound()) // Sometimes if you're too fast the held item returns null when it shouldn't
 		{
 			itemStack.setTagCompound(new NBTTagCompound());
 		}
@@ -48,6 +49,8 @@ public class BagInventory implements IInventory
 				}
 			}
 		}
+		
+		this.compound = itemStack.getTagCompound();
 	}
 	
 	@Override
@@ -114,14 +117,14 @@ public class BagInventory implements IInventory
 	@Override
 	public String getInventoryName()
 	{
-		if (HotbarBag.instance.config.getName() != null) return HotbarBag.instance.config.getName();
+		if (this.getName(this.compound) != null) return this.getName(this.compound);
 		return HotbarBag.instance.config.DEFAULT_NAME;
 	}
 	
 	@Override
 	public boolean hasCustomInventoryName()
 	{
-		if (HotbarBag.instance.config.getName() != null) return HotbarBag.instance.config.getName().length() > 0;
+		if (this.getName(this.compound) != null) return this.getName(this.compound).length() > 0;
 		return false;
 	}
 	
@@ -184,63 +187,63 @@ public class BagInventory implements IInventory
 		}
 	}
 	
-	public void readSettingsFromNBT(NBTTagCompound compound)
+	/*public void readSettingsFromNBT(NBTTagCompound compound)
 	{
-		Config config = HotbarBag.instance.config; // Get config instance
+		Config config = Config.instance; // Get config instance
 		
 		NBTTagList settings = compound.getTagList("Settings", NBT.TAG_COMPOUND);
 		
-		if(settings.getCompoundTagAt(0).hasKey("backgroundRed")) config.setBackgroundRed(settings.getCompoundTagAt(0).getInteger("backgroundRed")); 
-			else config.setBackgroundRed(config.DEFAULT_BACKGROUND_RED);
-		if(settings.getCompoundTagAt(0).hasKey("backgroundGreen")) config.setBackgroundGreen(settings.getCompoundTagAt(0).getInteger("backgroundGreen"));
-			else config.setBackgroundGreen(config.DEFAULT_BACKGROUND_GREEN);
-		if(settings.getCompoundTagAt(0).hasKey("backgroundBlue")) config.setBackgroundBlue(settings.getCompoundTagAt(0).getInteger("backgroundBlue"));
-			else config.setBackgroundBlue(config.DEFAULT_BACKGROUND_BLUE);
-		if(settings.getCompoundTagAt(0).hasKey("backgroundAlpha")) config.setBackgroundAlpha(settings.getCompoundTagAt(0).getInteger("backgroundAlpha"));
-			else config.setBackgroundAlpha(config.DEFAULT_BACKGROUND_ALPHA);
+		if(settings.getCompoundTagAt(0).hasKey("backgroundRed")) this.setBackgroundRed(settings.getCompoundTagAt(0).getInteger("backgroundRed"), this.compound); 
+			else this.setBackgroundRed(config.DEFAULT_BACKGROUND_RED, this.compound);
+		if(settings.getCompoundTagAt(0).hasKey("backgroundGreen")) this.setBackgroundGreen(settings.getCompoundTagAt(0).getInteger("backgroundGreen"), this.compound);
+			else this.setBackgroundGreen(config.DEFAULT_BACKGROUND_GREEN, this.compound);
+		if(settings.getCompoundTagAt(0).hasKey("backgroundBlue")) this.setBackgroundBlue(settings.getCompoundTagAt(0).getInteger("backgroundBlue"), this.compound);
+			else this.setBackgroundBlue(config.DEFAULT_BACKGROUND_BLUE, this.compound);
+		if(settings.getCompoundTagAt(0).hasKey("backgroundAlpha")) this.setBackgroundAlpha(settings.getCompoundTagAt(0).getInteger("backgroundAlpha"), this.compound);
+			else this.setBackgroundAlpha(config.DEFAULT_BACKGROUND_ALPHA, this.compound);
 		
-		if(settings.getCompoundTagAt(1).hasKey("highlightRed")) config.setHighlightRed(settings.getCompoundTagAt(1).getInteger("highlightRed"));
-			else config.setHighlightRed(config.DEFAULT_HIGHLIGHT_RED);
-		if(settings.getCompoundTagAt(1).hasKey("highlightGreen")) config.setHighlightGreen(settings.getCompoundTagAt(1).getInteger("highlightGreen"));
-			else config.setHighlightGreen(config.DEFAULT_HIGHLIGHT_GREEN);
-		if(settings.getCompoundTagAt(1).hasKey("highlightBlue")) config.setHighlightBlue(settings.getCompoundTagAt(1).getInteger("highlightBlue"));
-			else config.setHighlightBlue(config.DEFAULT_HIGHLIGHT_BLUE);
-		if(settings.getCompoundTagAt(1).hasKey("highlightAlpha")) config.setHighlightAlpha(settings.getCompoundTagAt(1).getInteger("highlightAlpha"));
-			else config.setHighlightAlpha(config.DEFAULT_HIGHLIGHT_ALPHA);
+		if(settings.getCompoundTagAt(1).hasKey("highlightRed")) this.setHighlightRed(settings.getCompoundTagAt(1).getInteger("highlightRed"), this.compound);
+			else this.setHighlightRed(config.DEFAULT_HIGHLIGHT_RED, this.compound);
+		if(settings.getCompoundTagAt(1).hasKey("highlightGreen")) this.setHighlightGreen(settings.getCompoundTagAt(1).getInteger("highlightGreen"), this.compound);
+			else this.setHighlightGreen(config.DEFAULT_HIGHLIGHT_GREEN, this.compound);
+		if(settings.getCompoundTagAt(1).hasKey("highlightBlue")) this.setHighlightBlue(settings.getCompoundTagAt(1).getInteger("highlightBlue"), this.compound);
+			else this.setHighlightBlue(config.DEFAULT_HIGHLIGHT_BLUE, this.compound);
+		if(settings.getCompoundTagAt(1).hasKey("highlightAlpha")) this.setHighlightAlpha(settings.getCompoundTagAt(1).getInteger("highlightAlpha"), this.compound);
+			else this.setHighlightAlpha(config.DEFAULT_HIGHLIGHT_ALPHA, this.compound);
 		
-		if(settings.getCompoundTagAt(2).hasKey("borderRed")) config.setBorderRed(settings.getCompoundTagAt(2).getInteger("borderRed")); 
-			else config.setBorderRed(config.DEFAULT_BORDER_RED);
-		if(settings.getCompoundTagAt(2).hasKey("borderGreen")) config.setBorderGreen(settings.getCompoundTagAt(2).getInteger("borderGreen"));
-			else config.setBorderGreen(config.DEFAULT_BORDER_GREEN);
-		if(settings.getCompoundTagAt(2).hasKey("borderBlue")) config.setBorderBlue(settings.getCompoundTagAt(2).getInteger("borderBlue"));
-			else config.setBorderBlue(config.DEFAULT_BORDER_BLUE);
-		if(settings.getCompoundTagAt(2).hasKey("borderAlpha")) config.setBorderAlpha(settings.getCompoundTagAt(2).getInteger("borderAlpha"));
-			else config.setBorderAlpha(config.DEFAULT_BORDER_ALPHA);
+		if(settings.getCompoundTagAt(2).hasKey("borderRed")) this.setBorderRed(settings.getCompoundTagAt(2).getInteger("borderRed")); 
+			else this.setBorderRed(config.DEFAULT_BORDER_RED);
+		if(settings.getCompoundTagAt(2).hasKey("borderGreen")) this.setBorderGreen(settings.getCompoundTagAt(2).getInteger("borderGreen"));
+			else this.setBorderGreen(config.DEFAULT_BORDER_GREEN);
+		if(settings.getCompoundTagAt(2).hasKey("borderBlue")) this.setBorderBlue(settings.getCompoundTagAt(2).getInteger("borderBlue"));
+			else this.setBorderBlue(config.DEFAULT_BORDER_BLUE);
+		if(settings.getCompoundTagAt(2).hasKey("borderAlpha")) this.setBorderAlpha(settings.getCompoundTagAt(2).getInteger("borderAlpha"));
+			else this.setBorderAlpha(config.DEFAULT_BORDER_ALPHA);
 	
-		if(settings.getCompoundTagAt(3).hasKey("mouseposRed")) config.setMouseposRed(settings.getCompoundTagAt(3).getInteger("mouseposRed"));
-			else config.setMouseposRed(config.DEFAULT_MOUSEPOS_RED);
-		if(settings.getCompoundTagAt(3).hasKey("mouseposGreen")) config.setMouseposGreen(settings.getCompoundTagAt(3).getInteger("mouseposGreen"));
-			else config.setMouseposGreen(config.DEFAULT_MOUSEPOS_GREEN);
-		if(settings.getCompoundTagAt(3).hasKey("mouseposBlue")) config.setMouseposBlue(settings.getCompoundTagAt(3).getInteger("mouseposBlue"));
-			else config.setMouseposBlue(config.DEFAULT_MOUSEPOS_BLUE);
-		if(settings.getCompoundTagAt(3).hasKey("mouseposAlpha")) config.setMouseposAlpha(settings.getCompoundTagAt(3).getInteger("mouseposAlpha"));
-			else config.setBackgroundAlpha(config.DEFAULT_MOUSEPOS_ALPHA);
+		if(settings.getCompoundTagAt(3).hasKey("mouseposRed")) this.setMouseposRed(settings.getCompoundTagAt(3).getInteger("mouseposRed"));
+			else this.setMouseposRed(config.DEFAULT_MOUSEPOS_RED);
+		if(settings.getCompoundTagAt(3).hasKey("mouseposGreen")) this.setMouseposGreen(settings.getCompoundTagAt(3).getInteger("mouseposGreen"));
+			else this.setMouseposGreen(config.DEFAULT_MOUSEPOS_GREEN);
+		if(settings.getCompoundTagAt(3).hasKey("mouseposBlue")) this.setMouseposBlue(settings.getCompoundTagAt(3).getInteger("mouseposBlue"));
+			else this.setMouseposBlue(config.DEFAULT_MOUSEPOS_BLUE);
+		if(settings.getCompoundTagAt(3).hasKey("mouseposAlpha")) this.setMouseposAlpha(settings.getCompoundTagAt(3).getInteger("mouseposAlpha"));
+			else this.setBackgroundAlpha(config.DEFAULT_MOUSEPOS_ALPHA);
 		
-		if(settings.getCompoundTagAt(4).hasKey("triangles")) config.setTriangles(settings.getCompoundTagAt(4).getInteger("triangles"));
-			else config.setTriangles(config.DEFAULT_TRIANGLES);
-		if(settings.getCompoundTagAt(4).hasKey("radius")) config.setRadius(settings.getCompoundTagAt(4).getInteger("radius"));
-			else config.setRadius(config.DEFAULT_RADIUS);
-		if(settings.getCompoundTagAt(4).hasKey("itemRadius")) config.setItemRadius(settings.getCompoundTagAt(4).getInteger("itemRadius"));
-			else config.setItemRadius(config.DEFAULT_ITEM_RADIUS);
+		if(settings.getCompoundTagAt(4).hasKey("triangles")) this.setTriangles(settings.getCompoundTagAt(4).getInteger("triangles"));
+			else this.setTriangles(config.DEFAULT_TRIANGLES);
+		if(settings.getCompoundTagAt(4).hasKey("radius")) this.setRadius(settings.getCompoundTagAt(4).getInteger("radius"));
+			else this.setRadius(config.DEFAULT_RADIUS);
+		if(settings.getCompoundTagAt(4).hasKey("itemRadius")) this.setItemRadius(settings.getCompoundTagAt(4).getInteger("itemRadius"));
+			else this.setItemRadius(config.DEFAULT_ITEM_RADIUS);
 		
-		if(settings.getCompoundTagAt(5).hasKey("itemRadiusAuto")) config.setUpdateItemRadiusAutomatic(settings.getCompoundTagAt(5).getBoolean("itemRadiusAuto"));
-			else config.setUpdateItemRadiusAutomatic(config.DEFAULT_UPDATE_ITEMS_AUTO);
-		if(settings.getCompoundTagAt(5).hasKey("muted")) config.setMuted(settings.getCompoundTagAt(5).getBoolean("muted"));
-			else config.setMuted(config.DEFAULT_MUTE);
-		if(settings.getCompoundTagAt(5).hasKey("name")) config.setName(settings.getCompoundTagAt(5).getString("name"));
-			else config.setName(config.DEFAULT_NAME);
+		if(settings.getCompoundTagAt(5).hasKey("itemRadiusAuto")) this.setUpdateItemRadiusAutomatic(settings.getCompoundTagAt(5).getBoolean("itemRadiusAuto"));
+			else this.setUpdateItemRadiusAutomatic(config.DEFAULT_UPDATE_ITEMS_AUTO);
+		if(settings.getCompoundTagAt(5).hasKey("muted")) this.setMuted(settings.getCompoundTagAt(5).getBoolean("muted"));
+			else this.setMuted(config.DEFAULT_MUTE);
+		if(settings.getCompoundTagAt(5).hasKey("name")) this.setName(settings.getCompoundTagAt(5).getString("name"));
+			else this.setName(config.DEFAULT_NAME);
 		
-	}
+	}*/
 	
 	public void writeToNBT(NBTTagCompound compound)
 	{
@@ -262,12 +265,405 @@ public class BagInventory implements IInventory
 		compound.setTag("Inventory", items);
 	}
 	
-	public void writeSettingsToNBT(NBTTagCompound itemCompound, NBTTagCompound constructCompound)
+	/*public void writeSettingsToNBT(NBTTagCompound compound)
+	{	
+		// Write item settings
+		NBTTagList settings = new NBTTagList();
+		
+		NBTTagCompound background = new NBTTagCompound();
+		NBTTagCompound highlight = new NBTTagCompound();
+		NBTTagCompound border = new NBTTagCompound();
+		NBTTagCompound mousepos = new NBTTagCompound();
+		NBTTagCompound circle = new NBTTagCompound();
+		NBTTagCompound general = new NBTTagCompound();
+		
+		background.setInteger("backgroundRed", this.getBackgroundRed());
+		background.setInteger("backgroundGreen", this.getBackgroundGreen());
+		background.setInteger("backgroundBlue", this.getBackgroundBlue());
+		background.setInteger("backgroundAlpha", this.getBackgroundAlpha());
+		
+		highlight.setInteger("highlightRed", this.getHighlightRed());
+		highlight.setInteger("highlightGreen", this.getHighlightGreen());
+		highlight.setInteger("highlightBlue", this.getHighlightBlue());
+		highlight.setInteger("highlightAlpha", this.getHighlightAlpha());
+		
+		border.setInteger("borderRed", this.getBorderRed());
+		border.setInteger("borderGreen", this.getBorderGreen());
+		border.setInteger("borderBlue", this.getBorderBlue());
+		border.setInteger("borderAlpha", this.getBorderAlpha());
+		
+		mousepos.setInteger("mouseposRed", this.getMouseposRed());
+		mousepos.setInteger("mouseposGreen", this.getMouseposGreen());
+		mousepos.setInteger("mouseposBlue", this.getMouseposBlue());
+		mousepos.setInteger("mouseposAlpha", this.getMouseposAlpha());
+		
+		circle.setInteger("triangles", this.getTriangles());
+		circle.setInteger("radius", this.getRadius());
+		circle.setInteger("itemRadius", this.getItemRadius());
+		
+		general.setBoolean("itemRadiusAuto", this.isUpdateItemRadiusAutomatic());
+		general.setBoolean("muted", this.isMuted());
+		general.setString("name", this.getName());
+		
+		settings.appendTag(background);
+		settings.appendTag(highlight);
+		settings.appendTag(border);
+		settings.appendTag(mousepos);
+		settings.appendTag(circle);
+		settings.appendTag(general);
+		
+		compound.setTag("Settings", settings);
+	}*/
+	
+	/**
+	 * @return the backgroundRed
+	 */
+	public int getBackgroundRed(NBTTagCompound compound)
 	{
-		System.out.println(itemCompound);
-		System.out.println(constructCompound);
-		itemCompound = constructCompound;
-		System.out.println(itemCompound);
-		System.out.println(constructCompound);
+		return compound.getInteger("backgroundRed");
+	}
+	
+	/**
+	 * @return the backgroundGreen
+	 */
+	public int getBackgroundGreen(NBTTagCompound compound)
+	{
+		return compound.getInteger("backgroundGreen");
+	}
+	
+	/**
+	 * @return the backgroundBlue
+	 */
+	public int getBackgroundBlue(NBTTagCompound compound)
+	{
+		return compound.getInteger("backgroundBlue");
+	}
+	
+	/**
+	 * @return the highlightRed
+	 */
+	public int getHighlightRed(NBTTagCompound compound)
+	{
+		return compound.getInteger("highlightRed");
+	}
+	
+	/**
+	 * @return the highlightGreen
+	 */
+	public int getHighlightGreen(NBTTagCompound compound)
+	{
+		return compound.getInteger("highlightGreen");
+	}
+	
+	/**
+	 * @return the highlightBlue
+	 */
+	public int getHighlightBlue(NBTTagCompound compound)
+	{
+		return compound.getInteger("highlightBlue");
+	}
+	
+	/**
+	 * @return the triangles
+	 */
+	public int getTriangles(NBTTagCompound compound)
+	{
+		return compound.getInteger("triangles");
+	}
+	
+	/**
+	 * @return the radius
+	 */
+	public int getRadius(NBTTagCompound compound)
+	{
+		return compound.getInteger("radius");
+	}
+	
+	/**
+	 * @return the itemRadius
+	 */
+	public int getItemRadius(NBTTagCompound compound)
+	{
+		return compound.getInteger("itemRadius");
+	}
+	
+	/**
+	 * @return the updateItemRadiusAutomatically
+	 */
+	public boolean isUpdateItemRadiusAutomatic(NBTTagCompound compound)
+	{
+		return compound.getBoolean("itemRadiusAuto");
+	}
+	
+	/**
+	 * @return the mute
+	 */
+	public boolean isMuted(NBTTagCompound compound)
+	{
+		return compound.getBoolean("muted");
+	}
+	
+	/**
+	 * @param backgroundRed the backgroundRed to set
+	 */
+	public void setBackgroundRed(int backgroundRed, NBTTagCompound compound)
+	{
+		compound.setInteger("backgroundRed", backgroundRed);
+	}
+	
+	/**
+	 * @param backgroundGreen the backgroundGreen to set
+	 */
+	public void setBackgroundGreen(int backgroundGreen, NBTTagCompound compound)
+	{
+		compound.setInteger("backgroundGreen", backgroundGreen);
+	}
+	
+	/**
+	 * @param backgroundBlue the backgroundBlue to set
+	 */
+	public void setBackgroundBlue(int backgroundBlue, NBTTagCompound compound)
+	{
+		compound.setInteger("backgroundBlue", backgroundBlue);
+	}
+	
+	/**
+	 * @param highlightRed the highlightRed to set
+	 */
+	public void setHighlightRed(int highlightRed, NBTTagCompound compound)
+	{
+		compound.setInteger("highlightRed", highlightRed);
+	}
+	
+	/**
+	 * @param highlightGreen the highlightGreen to set
+	 */
+	public void setHighlightGreen(int highlightGreen, NBTTagCompound compound)
+	{
+		compound.setInteger("highlightGreen", highlightGreen);
+	}
+	
+	/**
+	 * @param highlightBlue the highlightBlue to set
+	 */
+	public void setHighlightBlue(int highlightBlue, NBTTagCompound compound)
+	{
+		compound.setInteger("highlightBlue", highlightBlue);
+	}
+	
+	/**
+	 * @param triangles the triangles to set
+	 */
+	public void setTriangles(int triangles, NBTTagCompound compound)
+	{
+		compound.setInteger("triangles", triangles);
+	}
+	
+	/**
+	 * @param radius the radius to set
+	 */
+	public void setRadius(int radius, NBTTagCompound compound)
+	{
+		compound.setInteger("radius", radius);
+	}
+	
+	/**
+	 * @param itemRadius the itemRadius to set
+	 */
+	public void setItemRadius(int itemRadius, NBTTagCompound compound)
+	{
+		compound.setInteger("itemRadius", itemRadius);
+	}
+	
+	/**
+	 * @param updateItemRadiusAutomatically the updateItemRadiusAutomatically to set
+	 */
+	public void setUpdateItemRadiusAutomatic(boolean updateItemRadiusAutomatically, NBTTagCompound compound)
+	{
+		compound.setBoolean("itemRadiusAuto", updateItemRadiusAutomatically);
+	}
+	
+	/**
+	 * @param mute the mute to set
+	 */
+	public void setMuted(boolean mute, NBTTagCompound compound)
+	{
+		compound.setBoolean("muted", mute);
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName(NBTTagCompound compound)
+	{
+		return compound.getString("name");
+	}
+	
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name, NBTTagCompound compound)
+	{
+		compound.setString("name", name);
+	}
+
+	/**
+	 * @return the backgroundAlpha
+	 */
+	public int getBackgroundAlpha(NBTTagCompound compound) 
+	{
+		return compound.getInteger("backgroundAlpha");
+	}
+
+	/**
+	 * @param backgroundAlpha the backgroundAlpha to set
+	 */
+	public void setBackgroundAlpha(int backgroundAlpha, NBTTagCompound compound) 
+	{
+		compound.setInteger("backgroundAlpha", backgroundAlpha);
+	}
+
+	/**
+	 * @return the highlightAlpha
+	 */
+	public int getHighlightAlpha(NBTTagCompound compound) 
+	{
+		return compound.getInteger("highlightAlpha");
+	}
+
+	/**
+	 * @param highlightAlpha the highlightAlpha to set
+	 */
+	public void setHighlightAlpha(int highlightAlpha, NBTTagCompound compound) 
+	{
+		compound.setInteger("highlightAlpha", highlightAlpha);
+	}
+
+	/**
+	 * @return the borderRed
+	 */
+	public int getBorderRed(NBTTagCompound compound) 
+	{
+		return compound.getInteger("borderRed");
+	}
+
+	/**
+	 * @param borderRed the borderRed to set
+	 */
+	public void setBorderRed(int borderRed, NBTTagCompound compound) 
+	{
+		compound.setInteger("borderRed", borderRed);
+	}
+
+	/**
+	 * @return the borderGreen
+	 */
+	public int getBorderGreen(NBTTagCompound compound) 
+	{
+		return compound.getInteger("borderGreen");
+	}
+
+	/**
+	 * @param borderGreen the borderGreen to set
+	 */
+	public void setBorderGreen(int borderGreen, NBTTagCompound compound) 
+	{
+		compound.setInteger("borderGreen", borderGreen);
+	}
+
+	/**
+	 * @return the borderBlue
+	 */
+	public int getBorderBlue(NBTTagCompound compound) 
+	{
+		return compound.getInteger("borderBlue");
+	}
+
+	/**
+	 * @param borderBlue the borderBlue to set
+	 */
+	public void setBorderBlue(int borderBlue, NBTTagCompound compound) 
+	{
+		compound.setInteger("borderBlue", borderBlue);
+	}
+
+	/**
+	 * @return the borderAlpha
+	 */
+	public int getBorderAlpha(NBTTagCompound compound) 
+	{
+		return compound.getInteger("borderAlpha");
+	}
+
+	/**
+	 * @param borderAlpha the borderAlpha to set
+	 */
+	public void setBorderAlpha(int borderAlpha, NBTTagCompound compound) 
+	{
+		compound.setInteger("borderAlpha", borderAlpha);
+	}
+
+	/**
+	 * @return the mouseposRed
+	 */
+	public int getMouseposRed(NBTTagCompound compound) 
+	{
+		return compound.getInteger("mouseposRed");
+	}
+
+	/**
+	 * @param mouseposRed the mouseposRed to set
+	 */
+	public void setMouseposRed(int mouseposRed, NBTTagCompound compound) 
+	{
+		compound.setInteger("mouseposRed", mouseposRed);
+	}
+
+	/**
+	 * @return the mouseposGreen
+	 */
+	public int getMouseposGreen(NBTTagCompound compound) 
+	{
+		return compound.getInteger("mouseposGreen");
+	}
+
+	/**
+	 * @param mouseposGreen the mouseposGreen to set
+	 */
+	public void setMouseposGreen(int mouseposGreen, NBTTagCompound compound) 
+	{
+		compound.setInteger("mouseposGreen", mouseposGreen);
+	}
+
+	/**
+	 * @return the mouseposBlue
+	 */
+	public int getMouseposBlue(NBTTagCompound compound) 
+	{
+		return compound.getInteger("mouseposBlue");
+	}
+
+	/**
+	 * @param mouseposBlue the mouseposBlue to set
+	 */
+	public void setMouseposBlue(int mouseposBlue, NBTTagCompound compound) 
+	{
+		compound.setInteger("mouseposBlue", mouseposBlue);
+	}
+
+	/**
+	 * @return the mouseposAlpha
+	 */
+	public int getMouseposAlpha(NBTTagCompound compound) 
+	{
+		return compound.getInteger("mouseposAlpha");
+	}
+
+	/**
+	 * @param mouseposAlpha the mouseposAlpha to set
+	 */
+	public void setMouseposAlpha(int mouseposAlpha, NBTTagCompound compound) 
+	{
+		compound.setInteger("mouseposAlpha", mouseposAlpha);
 	}
 }

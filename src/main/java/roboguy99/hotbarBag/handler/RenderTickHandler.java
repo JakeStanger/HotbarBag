@@ -37,7 +37,6 @@ public class RenderTickHandler
 				{
 					Mouse.getDX();
 					Mouse.getDY();
-					this.minecraft.mouseHelper.deltaX = this.minecraft.mouseHelper.deltaY = 0;
 				}
 			}
 		}

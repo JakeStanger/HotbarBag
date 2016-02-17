@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import roboguy99.hotbarBag.HotbarBag;
-import roboguy99.hotbarBag.network.packet.SettingsOpen;
 
 /**
  * Item class for the bag
@@ -45,7 +44,7 @@ public class ItemBag extends Item
 	{
 		if (!entityPlayer.isSneaking()) entityPlayer.openGui(HotbarBag.instance, HotbarBag.GUI_INVENTORY, world, 0, 0, 0);
 		else
-			new SettingsOpen(); // Open config if player is sneaking
+			entityPlayer.openGui(HotbarBag.instance, HotbarBag.GUI_CONFIG, world, 0, 0, 0);
 			
 		return itemStack;
 	}

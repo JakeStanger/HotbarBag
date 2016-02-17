@@ -1,16 +1,17 @@
+[
 {
-  "modListVersion": 2,
-  "modList": [{
-    "modid": "hotbarBag",
-    "name": "Hotbar Bag",
-    "description": "Adds a bag which can be used to store items in. Weapon-wheel style item switching.",
-    "version": "1.1.2",
-    "mcversion": "1.7.10",
-    "url": "https://github.com/Roboguy99/HotbarBag",
-    "updateUrl": "",
-    "authorList": [ "roboguy99" ],
-    "credits": "Thanks to the Forge Forums for helping me with my inabilities",
-    "logoFile": "/assets/roboguy99/textures/items/bag.png",
-    "requiredMods": [ "Forge" ]
-  }]
+  "modid": "HotbarBag",
+  "name": "Hotbar Bag",
+  "description": "Adds a bag which acts like a small chest. It also has a GTA weapon wheel style selection",
+  "version": "1.1.3c",
+  "mcversion": "1.7.10",
+  "updateUrl": "",
+  "authorList": [
+    "Roboguy99"
+  ],
+  "credits": "Thanks to all those who helped me (especially on the Minecraft Forge forums)",
+  "logoFile": "logo.png",
+  "screenshots": [
+  ]
 }
+]

@@ -5,9 +5,10 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import roboguy99.hotbarBag.HotbarBag;
+import net.minecraft.item.ItemStack;
 import roboguy99.hotbarBag.inventory.BagInventory;
 import roboguy99.hotbarBag.inventory.InventoryHelper;
+import roboguy99.hotbarBag.item.ItemBag;
 
 /**
  * Packet for updating the inventory
@@ -45,7 +46,11 @@ public class InventoryUpdate implements IMessage
 		@Override
 		public IMessage onMessage(InventoryUpdate message, MessageContext ctx)
 		{
-			InventoryHelper.updateInventory(new BagInventory(ctx.getServerHandler().playerEntity.getHeldItem()), ctx.getServerHandler().playerEntity, message.sectorMouseIsIn);
+			ItemStack heldItem = ctx.getServerHandler().playerEntity.getHeldItem();
+			if(heldItem != null && heldItem.getItem() instanceof ItemBag)
+			{
+				InventoryHelper.updateInventory(new BagInventory(heldItem), ctx.getServerHandler().playerEntity, message.sectorMouseIsIn);
+			}
 			return null;
 		}
 	}

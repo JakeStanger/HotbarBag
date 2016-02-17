@@ -29,6 +29,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 	private Config config;
 	private BagInventory inventory;
 	private ItemStack heldItem;
+	private NBTTagCompound compound;
 	
 	private static final ResourceLocation texture = new ResourceLocation("roboguy99", "textures/gui/Config.png"); // Background texture
 	
@@ -123,6 +124,35 @@ public class GuiConfig extends GuiScreen implements ISlider
 	
 	private GuiTextField txtName;
 	
+	//Settings values
+	private int backgroundRed;
+	private int backgroundGreen;
+	private int backgroundBlue;
+	private int backgroundAlpha;
+	
+	private int highlightRed;
+	private int highlightGreen;
+	private int highlightBlue;
+	private int highlightAlpha;
+	
+	private int borderRed;
+	private int borderGreen;
+	private int borderBlue;
+	private int borderAlpha;
+	
+	private int mouseposRed;
+	private int mouseposGreen;
+	private int mouseposBlue;
+	private int mouseposAlpha;
+	
+	private int triangles;
+	private int radius;
+	private int itemRadius;
+	
+	private boolean muted;
+	private boolean itemRadiusAuto;
+	private String name;
+	
 	//General things
 	private int guiLeft, guiTop;
 	private int pageNum = 0;
@@ -130,9 +160,10 @@ public class GuiConfig extends GuiScreen implements ISlider
 	
 	private boolean wasJustReset = true;
 	
+	
 	@Override
 	public void initGui()
-	{
+	{	
 		this.guiLeft = (this.width - this.xSize) / 2;
 		this.guiTop = (this.height - this.ySize) / 2;
 		
@@ -143,39 +174,40 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.MARGIN_RIGHTCOL = this.MARGIN_MIDCOL + this.SLIDER_WIDTH + 5;
 		this.MARGIN_TOP_SECONDROW = 5*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE);
 		
-		this.config = HotbarBag.instance.config;
+		this.config = Config.instance;
 		
 		this.heldItem = this.mc.thePlayer.getHeldItem();
 		this.inventory = new BagInventory(this.heldItem);
+		this.compound = this.heldItem.getTagCompound();
 		
-		inventory.readSettingsFromNBT(heldItem.getTagCompound());
+		this.loadValuesFromNBT();
 		
 		// Create instances of each component
 		//Page 1
-		this.sldHighlightRed = new GuiSlider(this.ID_HIGHLIGHT_RED, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getHighlightRed(), false, true, this);
-		this.sldHighlightGreen = new GuiSlider(this.ID_HIGHLIGHT_GREEN, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getHighlightGreen(), false, true, this);
-		this.sldHighlightBlue = new GuiSlider(this.ID_HIGHLIGHT_BLUE, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getHighlightBlue(), false, true, this);
-		this.sldHighlightAlpha = new GuiSlider(this.ID_HIGHLIGHT_ALPHA, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.config.getHighlightAlpha(), false, true, this);
+		this.sldHighlightRed = new GuiSlider(this.ID_HIGHLIGHT_RED, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.highlightRed, false, true, this);
+		this.sldHighlightGreen = new GuiSlider(this.ID_HIGHLIGHT_GREEN, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.highlightGreen, false, true, this);
+		this.sldHighlightBlue = new GuiSlider(this.ID_HIGHLIGHT_BLUE, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.highlightBlue, false, true, this);
+		this.sldHighlightAlpha = new GuiSlider(this.ID_HIGHLIGHT_ALPHA, this.MARGIN_LEFT, this.MARGIN_TOP + this.VERTICAL_SPACE + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.highlightAlpha, false, true, this);
 		
-		this.sldBackgroundRed = new GuiSlider(this.ID_BACKGROUND_RED, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getBackgroundRed(), false, true, this);
-		this.sldBackgroundGreen = new GuiSlider(this.ID_BACKGROUND_GREEN, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getBackgroundGreen(), false, true, this);
-		this.sldBackgroundBlue = new GuiSlider(this.ID_BACKGROUND_BLUE, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getBackgroundBlue(), false, true, this);
-		this.sldBackgroundAlpha = new GuiSlider(this.ID_BACKGROUND_ALPHA, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.config.getBackgroundAlpha(), false, true, this);
+		this.sldBackgroundRed = new GuiSlider(this.ID_BACKGROUND_RED, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.backgroundRed, false, true, this);
+		this.sldBackgroundGreen = new GuiSlider(this.ID_BACKGROUND_GREEN, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.backgroundGreen, false, true, this);
+		this.sldBackgroundBlue = new GuiSlider(this.ID_BACKGROUND_BLUE, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.backgroundBlue, false, true, this);
+		this.sldBackgroundAlpha = new GuiSlider(this.ID_BACKGROUND_ALPHA, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.VERTICAL_SPACE + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.backgroundAlpha, false, true, this);
 		
-		this.sldBorderRed = new GuiSlider(this.ID_BORDER_RED, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getBorderRed(), false, true, this);
-		this.sldBorderGreen = new GuiSlider(this.ID_BORDER_GREEN, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getBorderGreen(), false, true, this);
-		this.sldBorderBlue = new GuiSlider(this.ID_BORDER_BLUE, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getBorderBlue(), false, true, this);
-		this.sldBorderAlpha = new GuiSlider(this.ID_BORDER_ALPHA, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.config.getBorderAlpha(), false, true, this);
+		this.sldBorderRed = new GuiSlider(this.ID_BORDER_RED, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.borderRed, false, true, this);
+		this.sldBorderGreen = new GuiSlider(this.ID_BORDER_GREEN, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.borderGreen, false, true, this);
+		this.sldBorderBlue = new GuiSlider(this.ID_BORDER_BLUE, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.borderBlue, false, true, this);
+		this.sldBorderAlpha = new GuiSlider(this.ID_BORDER_ALPHA, this.MARGIN_LEFT, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.borderAlpha, false, true, this);
 		
-		this.sldMouseposRed = new GuiSlider(this.ID_MOUSEPOS_RED, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getMouseposRed(), false, true, this);
-		this.sldMouseposGreen = new GuiSlider(this.ID_MOUSEPOS_GREEN, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getMouseposGreen(), false, true, this);
-		this.sldMouseposBlue = new GuiSlider(this.ID_MOUSEPOS_BLUE, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.config.getMouseposBlue(), false, true, this);
-		this.sldMouseposAlpha = new GuiSlider(this.ID_MOUSEPOS_ALPHA, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.config.getMouseposAlpha(), false, true, this);
+		this.sldMouseposRed = new GuiSlider(this.ID_MOUSEPOS_RED, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Red ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.mouseposRed, false, true, this);
+		this.sldMouseposGreen = new GuiSlider(this.ID_MOUSEPOS_GREEN, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Green ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.mouseposGreen, false, true, this);
+		this.sldMouseposBlue = new GuiSlider(this.ID_MOUSEPOS_BLUE, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Blue ", "", config.COLOUR_MIN, config.COLOUR_MAX, this.mouseposBlue, false, true, this);
+		this.sldMouseposAlpha = new GuiSlider(this.ID_MOUSEPOS_ALPHA, this.MARGIN_MIDCOL, this.MARGIN_TOP + this.MARGIN_TOP_SECONDROW + 3*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Alpha ", "%", config.ALPHA_MIN, config.ALPHA_MAX, this.mouseposAlpha, false, true, this);
 		
 		//Page 2
-		this.sldTriangles = new GuiSlider(this.ID_TRIANGLES, this.MARGIN_LEFT, this.MARGIN_TOP, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Triangles ", "", config.TRIANGLES_MIN, config.TRIANGLES_MAX, this.config.getTriangles(), false, true, this);
-		this.sldRadius = new GuiSlider(this.ID_RADIUS, this.MARGIN_LEFT, this.MARGIN_TOP + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Radius ", "", config.RADIUS_MIN, config.RADIUS_MAX, this.config.getRadius(), false, true, this);
-		this.sldItemRadius = new GuiSlider(this.ID_ITEM_RADIUS, this.MARGIN_LEFT, this.MARGIN_TOP + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Item Radius ", "", config.RADIUS_MIN, config.RADIUS_MAX, this.config.getItemRadius(), false, true, this);
+		this.sldTriangles = new GuiSlider(this.ID_TRIANGLES, this.MARGIN_LEFT, this.MARGIN_TOP, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Triangles ", "", config.TRIANGLES_MIN, config.TRIANGLES_MAX, this.triangles, false, true, this);
+		this.sldRadius = new GuiSlider(this.ID_RADIUS, this.MARGIN_LEFT, this.MARGIN_TOP + this.SLIDER_HEIGHT + this.VERTICAL_SPACE, this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Radius ", "", config.RADIUS_MIN, config.RADIUS_MAX, this.radius, false, true, this);
+		this.sldItemRadius = new GuiSlider(this.ID_ITEM_RADIUS, this.MARGIN_LEFT, this.MARGIN_TOP + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.SLIDER_WIDTH, this.SLIDER_HEIGHT, "Item Radius ", "", config.RADIUS_MIN, config.RADIUS_MAX, this.itemRadius, false, true, this);
 		
 		this.btnAutoItemRadius = new GuiButton(this.ID_ITEM_RADIUS_AUTOMATIC, this.MARGIN_MIDCOL, this.MARGIN_TOP + 2*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.BUTTON_WIDTH+20, this.BUTTON_HEIGHT, "");
 		this.btnMute = new GuiButton(this.ID_MUTE, this.MARGIN_LEFT, this.MARGIN_TOP + 4*(this.SLIDER_HEIGHT + this.VERTICAL_SPACE), this.BUTTON_WIDTH+20, this.BUTTON_HEIGHT, "");
@@ -226,7 +258,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.txtName.setTextColor(-1);
 		this.txtName.setEnableBackgroundDrawing(true);
 		this.txtName.setMaxStringLength(30);
-		this.txtName.setText(this.config.getName());
+		this.txtName.setText(this.name);
 		this.txtName.setFocused(true);
 		
 		this.loadPage(0); //Always start on the first screen
@@ -242,25 +274,25 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.mc.getTextureManager().bindTexture(texture);
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 		
-		this.btnAutoItemRadius.displayString = this.config.isUpdateItemRadiusAutomatic() ? "Automatic" : "Manual";
-		this.btnMute.displayString = this.config.isMuted() ? "Muted" : "Unmuted";
+		this.btnAutoItemRadius.displayString = this.itemRadiusAuto ? "Automatic" : "Manual";
+		this.btnMute.displayString = this.muted ? "Muted" : "Unmuted";
 		
-		if(this.config.isUpdateItemRadiusAutomatic()) this.sldItemRadius.enabled = false;
+		if(this.itemRadiusAuto) this.sldItemRadius.enabled = false;
 		else this.sldItemRadius.enabled = true;
 		
 		if(this.pageNum == 0)
 		{
 			// Add text labels, coloured to RGB values.
-			this.fontRendererObj.drawString("Highlight Colour", this.MARGIN_LEFT + 12, this.MARGIN_TOP - 5, new Color(this.config.getHighlightRed(), this.config.getHighlightGreen(), this.config.getHighlightBlue()).getRGB(), false);
-			this.fontRendererObj.drawString("Background Colour", this.MARGIN_MIDCOL + 4, this.MARGIN_TOP - 5, new Color(this.config.getBackgroundRed(), this.config.getBackgroundGreen(), this.config.getBackgroundBlue()).getRGB(), false);
+			this.fontRendererObj.drawString("Highlight Colour", this.MARGIN_LEFT + 12, this.MARGIN_TOP - 5, new Color(this.highlightRed, this.highlightGreen, this.highlightBlue).getRGB(), false);
+			this.fontRendererObj.drawString("Background Colour", this.MARGIN_MIDCOL + 4, this.MARGIN_TOP - 5, new Color(this.backgroundRed, this.backgroundGreen, this.backgroundBlue).getRGB(), false);
 			
-			this.fontRendererObj.drawString("Border Colour", this.MARGIN_LEFT + 14, this.guiTop + this.MARGIN_TOP_SECONDROW, new Color(this.config.getBorderRed(), this.config.getBorderGreen(), this.config.getBorderBlue()).getRGB(), false);
-			this.fontRendererObj.drawString("Mouse Pos Colour", this.MARGIN_MIDCOL + 6, this.guiTop + this.MARGIN_TOP_SECONDROW, new Color(this.config.getMouseposRed(), this.config.getMouseposGreen(), this.config.getMouseposBlue()).getRGB(), false);
+			this.fontRendererObj.drawString("Border Colour", this.MARGIN_LEFT + 14, this.guiTop + this.MARGIN_TOP_SECONDROW, new Color(this.borderRed, this.borderGreen, this.borderBlue).getRGB(), false);
+			this.fontRendererObj.drawString("Mouse Pos Colour", this.MARGIN_MIDCOL + 6, this.guiTop + this.MARGIN_TOP_SECONDROW, new Color(this.mouseposRed, this.mouseposGreen, this.mouseposBlue).getRGB(), false);
 		}
 		if(this.pageNum == 1)
 		{
 			this.txtName.drawTextBox();
-			/*this.fontRendererObj.drawString("More triangles", this.MARGIN_MIDCOL + 6, this.MARGIN_TOP, Color.BLACK.getRGB(), false); //TODO either sort this out or just delete it
+			/*this.fontRendererObj.drawString("More triangles", this.MARGIN_MIDCOL + 6, this.MARGIN_TOP, Color.BLACK.getRGB(), false); //TODO replace this with a tooltip
 			this.fontRendererObj.drawString("=", this.MARGIN_MIDCOL + 40, this.MARGIN_TOP + 6, Color.BLACK.getRGB(), false);
 			this.fontRendererObj.drawString("Higher resolution", this.MARGIN_MIDCOL, this.MARGIN_TOP + 12, Color.BLACK.getRGB(), false);*/
 		}
@@ -275,41 +307,41 @@ public class GuiConfig extends GuiScreen implements ISlider
 		if(!this.wasJustReset) this.btnReset.enabled = true;
 		this.wasJustReset = false;
 		
-		if (slider == this.sldBackgroundRed) this.config.setBackgroundRed(slider.getValueInt());
-		if (slider == this.sldBackgroundGreen) this.config.setBackgroundGreen(slider.getValueInt());
-		if (slider == this.sldBackgroundBlue) this.config.setBackgroundBlue(slider.getValueInt());
-		if (slider == this.sldBackgroundAlpha) this.config.setBackgroundAlpha(slider.getValueInt());
+		if (slider == this.sldBackgroundRed) this.backgroundRed = this.sldBackgroundRed.getValueInt();
+		if (slider == this.sldBackgroundGreen) this.backgroundGreen = this.sldBackgroundGreen.getValueInt();
+		if (slider == this.sldBackgroundBlue) this.backgroundBlue = this.sldBackgroundBlue.getValueInt();
+		if (slider == this.sldBackgroundAlpha) this.backgroundAlpha = this.sldBackgroundAlpha.getValueInt();
 		
-		if (slider == this.sldHighlightRed) this.config.setHighlightRed(slider.getValueInt());
-		if (slider == this.sldHighlightGreen) this.config.setHighlightGreen(slider.getValueInt());
-		if (slider == this.sldHighlightBlue) this.config.setHighlightBlue(slider.getValueInt());
-		if (slider == this.sldHighlightAlpha) this.config.setHighlightAlpha(slider.getValueInt());
+		if (slider == this.sldHighlightRed) this.highlightRed = this.sldHighlightRed.getValueInt();
+		if (slider == this.sldHighlightGreen) this.highlightGreen = this.sldHighlightGreen.getValueInt();
+		if (slider == this.sldHighlightBlue) this.highlightBlue = this.sldHighlightBlue.getValueInt();
+		if (slider == this.sldHighlightAlpha) this.highlightAlpha = this.sldHighlightAlpha.getValueInt();
 		
-		if (slider == this.sldBorderRed) this.config.setBorderRed(slider.getValueInt());
-		if (slider == this.sldBorderGreen) this.config.setBorderGreen(slider.getValueInt());
-		if (slider == this.sldBorderBlue) this.config.setBorderBlue(slider.getValueInt());
-		if (slider == this.sldBorderAlpha) this.config.setBorderAlpha(slider.getValueInt());
+		if (slider == this.sldBorderRed) this.borderRed = this.sldBorderRed.getValueInt();
+		if (slider == this.sldBorderGreen) this.borderGreen = this.sldBorderGreen.getValueInt();
+		if (slider == this.sldBorderBlue) this.borderBlue = this.sldBorderBlue.getValueInt();
+		if (slider == this.sldBorderAlpha) this.borderAlpha = this.sldBorderAlpha.getValueInt();
 		
-		if (slider == this.sldMouseposRed) this.config.setMouseposRed(slider.getValueInt());
-		if (slider == this.sldMouseposGreen) this.config.setMouseposGreen(slider.getValueInt());
-		if (slider == this.sldMouseposBlue) this.config.setMouseposBlue(slider.getValueInt());
-		if (slider == this.sldMouseposAlpha) this.config.setMouseposAlpha(slider.getValueInt());
+		if (slider == this.sldMouseposRed) this.mouseposRed = this.sldMouseposRed.getValueInt();
+		if (slider == this.sldMouseposGreen) this.mouseposGreen = this.sldMouseposGreen.getValueInt();
+		if (slider == this.sldMouseposBlue) this.mouseposBlue = this.sldMouseposBlue.getValueInt();
+		if (slider == this.sldMouseposAlpha) this.mouseposAlpha = this.sldMouseposAlpha.getValueInt();
 		
-		if (slider == this.sldTriangles) this.config.setTriangles(slider.getValueInt());
+		if (slider == this.sldTriangles) this.triangles = this.sldTriangles.getValueInt();
 		if (slider == this.sldRadius)
 		{
-			this.config.setRadius(slider.getValueInt());
-			if (this.config.isUpdateItemRadiusAutomatic())
+			this.radius = this.sldRadius.getValueInt();
+			if (this.itemRadiusAuto)
 			{
-				int value = Math.round(slider.getValueInt() * 0.85f);
+				int value = Math.round(slider.getValueInt() * 0.833f); //TODO add ratio slider
 				
 				this.sldItemRadius.setValue(value);
 				this.sldItemRadius.updateSlider();
 				
-				this.config.setItemRadius(value);
+				this.itemRadius = this.sldItemRadius.getValueInt();
 			}
 		}
-		if (slider == this.sldItemRadius) this.config.setItemRadius(slider.getValueInt());
+		if (slider == this.sldItemRadius) this.itemRadius = this.sldItemRadius.getValueInt();
 	}
 	
 	@Override
@@ -321,19 +353,18 @@ public class GuiConfig extends GuiScreen implements ISlider
 			this.wasJustReset = false;
 		}
 		
-		if (btn == this.btnAutoItemRadius) this.config.setUpdateItemRadiusAutomatic(!this.config.isUpdateItemRadiusAutomatic());
-		if (btn == this.btnMute) this.config.setMuted(!this.config.isMuted());
+		if (btn == this.btnAutoItemRadius) this.itemRadiusAuto = !this.itemRadiusAuto;
+		if (btn == this.btnMute) this.muted = !this.muted;
 		
 		if (btn == this.btnReset) // Reset everything back to the default value
 		{
 			this.wasJustReset = true;
 			this.btnReset.enabled = false;
 			
-			this.config.setAllValuesToDefault();
-			HotbarBag.networkWrapper.sendToServer(new SettingsUpdate(this.heldItem.getTagCompound(), this.constructNBTTagCompound())); // We only wan't to write, updating would undo the defaults
+			this.setAllValuesToDefault();
 			
 			this.updateSliders();
-			this.txtName.setText(this.config.DEFAULT_NAME);
+			this.txtName.setText(config.DEFAULT_NAME);
 		}
 		if (btn == this.btnSave)
 		{
@@ -346,73 +377,146 @@ public class GuiConfig extends GuiScreen implements ISlider
 	}
 	
 	/**
-	 * Write the current settings to NBT, then update the config values
+	 * Write the current settings to NBT, then update the inventory values
 	 */
 	private void writeAndUpdate()
 	{
-		this.config.setBackgroundRed(this.sldBackgroundRed.getValueInt());
-		this.config.setBackgroundGreen(this.sldBackgroundGreen.getValueInt());
-		this.config.setBackgroundBlue(this.sldBackgroundBlue.getValueInt());
-		this.config.setBackgroundAlpha(this.sldBackgroundAlpha.getValueInt());
+		Object[][] settingsList = new Object[6][4];
 		
-		this.config.setHighlightRed(this.sldHighlightRed.getValueInt());
-		this.config.setHighlightGreen(this.sldHighlightGreen.getValueInt());
-		this.config.setHighlightBlue(this.sldHighlightBlue.getValueInt());
-		this.config.setHighlightAlpha(this.sldHighlightAlpha.getValueInt());
+		settingsList[0][0] = this.sldBackgroundRed.getValueInt();
+		settingsList[0][1] = this.sldBackgroundGreen.getValueInt();
+		settingsList[0][2] = this.sldBackgroundBlue.getValueInt();
+		settingsList[0][3] = this.sldBackgroundAlpha.getValueInt();
 		
-		this.config.setBorderRed(this.sldBorderRed.getValueInt());
-		this.config.setBorderGreen(this.sldBorderGreen.getValueInt());
-		this.config.setBorderBlue(this.sldBorderBlue.getValueInt());
-		this.config.setBorderAlpha(this.sldBorderAlpha.getValueInt());
+		settingsList[1][0] = this.sldHighlightRed.getValueInt();
+		settingsList[1][1] = this.sldHighlightGreen.getValueInt();
+		settingsList[1][2] = this.sldHighlightBlue.getValueInt();
+		settingsList[1][3] = this.sldHighlightAlpha.getValueInt();
 		
-		this.config.setMouseposRed(this.sldMouseposRed.getValueInt());
-		this.config.setMouseposGreen(this.sldMouseposGreen.getValueInt());
-		this.config.setMouseposBlue(this.sldMouseposBlue.getValueInt());
-		this.config.setMouseposAlpha(this.sldMouseposAlpha.getValueInt());
+		settingsList[2][0] = this.sldBorderRed.getValueInt();
+		settingsList[2][1] = this.sldBorderGreen.getValueInt();
+		settingsList[2][2] = this.sldBorderBlue.getValueInt();
+		settingsList[2][3] = this.sldBorderAlpha.getValueInt();
 		
-		this.config.setTriangles(this.sldTriangles.getValueInt());
-		this.config.setRadius(this.sldRadius.getValueInt());
-		this.config.setItemRadius(this.sldItemRadius.getValueInt());
+		settingsList[3][0] = this.sldMouseposRed.getValueInt();
+		settingsList[3][1] = this.sldMouseposGreen.getValueInt();
+		settingsList[3][2] = this.sldMouseposBlue.getValueInt();
+		settingsList[3][3] = this.sldMouseposAlpha.getValueInt();
 		
-		this.config.setName(this.txtName.getText());
+		settingsList[4][0] = this.sldTriangles.getValueInt();
+		settingsList[4][1] = this.sldRadius.getValueInt();
+		settingsList[4][2] = this.sldItemRadius.getValueInt();
 		
-		HotbarBag.networkWrapper.sendToServer(new SettingsUpdate(this.heldItem.getTagCompound(), this.constructNBTTagCompound()));
+		settingsList[5][0] = this.muted;
+		settingsList[5][1] = this.itemRadiusAuto;
+		settingsList[5][2] = this.txtName.getText();
+		
+		HotbarBag.networkWrapper.sendToServer(new SettingsUpdate(settingsList));
+	}
+	
+	public void setAllValuesToDefault()
+	{
+		Config config = Config.instance;
+		
+		Object[][] settingsList = new Object[6][4];
+		
+		settingsList[0][0] = config.DEFAULT_BACKGROUND_RED;
+		settingsList[0][1] = config.DEFAULT_BACKGROUND_GREEN;
+		settingsList[0][2] = config.DEFAULT_BACKGROUND_BLUE;
+		settingsList[0][3] = config.DEFAULT_BACKGROUND_ALPHA;
+		
+		settingsList[1][0] = config.DEFAULT_HIGHLIGHT_RED;
+		settingsList[1][1] = config.DEFAULT_HIGHLIGHT_GREEN;
+		settingsList[1][2] = config.DEFAULT_HIGHLIGHT_BLUE;
+		settingsList[1][3] = config.DEFAULT_HIGHLIGHT_ALPHA;
+		
+		settingsList[2][0] = config.DEFAULT_BORDER_RED;
+		settingsList[2][1] = config.DEFAULT_BORDER_GREEN;
+		settingsList[2][2] = config.DEFAULT_BORDER_BLUE;
+		settingsList[2][3] = config.DEFAULT_BORDER_ALPHA;
+		
+		settingsList[3][0] = config.DEFAULT_MOUSEPOS_RED;
+		settingsList[3][1] = config.DEFAULT_MOUSEPOS_GREEN;
+		settingsList[3][2] = config.DEFAULT_MOUSEPOS_BLUE;
+		settingsList[3][3] = config.DEFAULT_MOUSEPOS_ALPHA;
+		
+		settingsList[4][0] = config.DEFAULT_TRIANGLES;
+		settingsList[4][1] = config.DEFAULT_RADIUS;
+		settingsList[4][2] = config.DEFAULT_ITEM_RADIUS;
+		
+		settingsList[5][0] = config.DEFAULT_MUTE;
+		settingsList[5][1] = config.DEFAULT_UPDATE_ITEMS_AUTO;
+		settingsList[5][2] = config.DEFAULT_NAME;
+		
+		//Send packet
+		HotbarBag.networkWrapper.sendToServer(new SettingsUpdate(settingsList));
+		
+		//Update local fields
+		this.backgroundRed = config.DEFAULT_BACKGROUND_RED;
+		this.backgroundGreen = config.DEFAULT_BACKGROUND_GREEN;
+		this.backgroundBlue = config.DEFAULT_BACKGROUND_BLUE;
+		this.backgroundAlpha = config.DEFAULT_BACKGROUND_ALPHA;
+		
+		this.highlightRed = config.DEFAULT_HIGHLIGHT_RED;
+		this.highlightGreen = config.DEFAULT_HIGHLIGHT_GREEN;
+		this.highlightBlue = config.DEFAULT_HIGHLIGHT_BLUE;
+		this.highlightAlpha = config.DEFAULT_HIGHLIGHT_ALPHA;
+		
+		this.borderRed = config.DEFAULT_BORDER_RED;
+		this.borderGreen = config.DEFAULT_BORDER_GREEN;
+		this.borderBlue = config.DEFAULT_BORDER_BLUE;
+		this.borderAlpha = config.DEFAULT_BORDER_ALPHA;
+		
+		this.mouseposRed = config.DEFAULT_MOUSEPOS_RED;
+		this.mouseposGreen = config.DEFAULT_MOUSEPOS_GREEN;
+		this.mouseposBlue = config.DEFAULT_MOUSEPOS_BLUE;
+		this.mouseposAlpha = config.DEFAULT_MOUSEPOS_ALPHA;
+		
+		this.triangles = config.DEFAULT_TRIANGLES;
+		this.radius = config.DEFAULT_RADIUS;
+		this.itemRadius = config.DEFAULT_ITEM_RADIUS;
+		
+		this.muted = config.DEFAULT_MUTE;
+		this.itemRadiusAuto = config.DEFAULT_UPDATE_ITEMS_AUTO;
+		this.name = config.DEFAULT_NAME;
 	}
 	
 	/**
-	 * Set all of the sliders to the config values, then update them on screen
+	 * Set all of the sliders to the inventory values, then update them on screen
 	 */
 	private void updateSliders()
-	{
-		this.sldBackgroundRed.setValue(this.config.getBackgroundRed());
-		this.sldBackgroundGreen.setValue(this.config.getBackgroundGreen());
-		this.sldBackgroundBlue.setValue(this.config.getBackgroundBlue());
-		this.sldBackgroundAlpha.setValue(this.config.getBackgroundAlpha());
+	{	
+		//Set slider values
+		this.sldBackgroundRed.setValue(this.backgroundRed);
+		this.sldBackgroundGreen.setValue(this.backgroundGreen);
+		this.sldBackgroundBlue.setValue(this.backgroundBlue);
+		this.sldBackgroundAlpha.setValue(this.backgroundAlpha);
 		
-		this.sldHighlightRed.setValue(this.config.getHighlightRed());
-		this.sldHighlightGreen.setValue(this.config.getHighlightGreen());
-		this.sldHighlightBlue.setValue(this.config.getHighlightBlue());
-		this.sldHighlightAlpha.setValue(this.config.getHighlightAlpha());
+		this.sldHighlightRed.setValue(this.highlightRed);
+		this.sldHighlightGreen.setValue(this.highlightGreen);
+		this.sldHighlightBlue.setValue(this.highlightBlue);
+		this.sldHighlightAlpha.setValue(this.highlightAlpha);
 		
-		this.sldBorderRed.setValue(this.config.getBorderRed());
-		this.sldBorderGreen.setValue(this.config.getBorderGreen());
-		this.sldBorderBlue.setValue(this.config.getBorderBlue());
-		this.sldBorderAlpha.setValue(this.config.getBorderAlpha());
+		this.sldBorderRed.setValue(this.borderRed);
+		this.sldBorderGreen.setValue(this.borderGreen);
+		this.sldBorderBlue.setValue(this.borderBlue);
+		this.sldBorderAlpha.setValue(this.borderAlpha);
 		
-		this.sldMouseposRed.setValue(this.config.getMouseposRed());
-		this.sldMouseposGreen.setValue(this.config.getMouseposGreen());
-		this.sldMouseposBlue.setValue(this.config.getMouseposBlue());
-		this.sldMouseposAlpha.setValue(this.config.getMouseposAlpha());
+		this.sldMouseposRed.setValue(this.mouseposRed);
+		this.sldMouseposGreen.setValue(this.mouseposGreen);
+		this.sldMouseposBlue.setValue(this.mouseposBlue);
+		this.sldMouseposAlpha.setValue(this.mouseposAlpha);
 		
-		this.sldTriangles.setValue(this.config.getTriangles());
-		this.sldRadius.setValue(this.config.getRadius());
-		this.sldItemRadius.setValue(this.config.getItemRadius());
+		this.sldTriangles.setValue(this.triangles);
+		this.sldRadius.setValue(this.itemRadius);
+		this.sldItemRadius.setValue(this.itemRadius);
 		
 		this.sldBackgroundRed.updateSlider();
 		this.sldBackgroundGreen.updateSlider();
 		this.sldBackgroundBlue.updateSlider();
 		this.sldBackgroundAlpha.updateSlider();
 		
+		//Update sliders on screen
 		this.sldHighlightRed.updateSlider();
 		this.sldHighlightGreen.updateSlider();
 		this.sldHighlightBlue.updateSlider();
@@ -432,6 +536,7 @@ public class GuiConfig extends GuiScreen implements ISlider
 		this.sldRadius.updateSlider();
 		this.sldItemRadius.updateSlider();
 		
+		//Change button states
 		this.wasJustReset = true;
 		this.btnReset.enabled = false;
 	}
@@ -507,58 +612,38 @@ public class GuiConfig extends GuiScreen implements ISlider
 			else this.btnPrev.enabled = true;
 	}
 	
-	private NBTTagCompound constructNBTTagCompound()
+	/**
+	 * Set fields in the class to NBT data
+	 */
+	private void loadValuesFromNBT()
 	{
-		NBTTagCompound compound = new NBTTagCompound();
+		this.backgroundRed = this.inventory.getBackgroundRed(this.compound);
+		this.backgroundGreen = this.inventory.getBackgroundGreen(this.compound);
+		this.backgroundBlue = this.inventory.getBackgroundBlue(this.compound);
+		this.backgroundAlpha = this.inventory.getBackgroundAlpha(this.compound);
 		
-		// Write item settings
-		NBTTagList settings = new NBTTagList();
+		this.highlightRed = this.inventory.getHighlightRed(this.compound);
+		this.highlightGreen = this.inventory.getHighlightGreen(this.compound);
+		this.highlightBlue = this.inventory.getHighlightBlue(this.compound);
+		this.highlightAlpha = this.inventory.getHighlightAlpha(this.compound);
 		
-		NBTTagCompound background = new NBTTagCompound();
-		NBTTagCompound highlight = new NBTTagCompound();
-		NBTTagCompound border = new NBTTagCompound();
-		NBTTagCompound mousepos = new NBTTagCompound();
-		NBTTagCompound circle = new NBTTagCompound();
-		NBTTagCompound general = new NBTTagCompound();
+		this.borderRed = this.inventory.getBorderRed(this.compound);
+		this.borderGreen = this.inventory.getBorderGreen(this.compound);
+		this.borderBlue = this.inventory.getBorderBlue(this.compound);
+		this.borderAlpha = this.inventory.getBorderAlpha(this.compound);
 		
-		background.setInteger("backgroundRed", config.getBackgroundRed());
-		background.setInteger("backgroundGreen", config.getBackgroundGreen());
-		background.setInteger("backgroundBlue", config.getBackgroundBlue());
-		background.setInteger("backgroundAlpha", config.getBackgroundAlpha());
+		this.mouseposRed = this.inventory.getMouseposRed(this.compound);
+		this.mouseposGreen = this.inventory.getMouseposGreen(this.compound);
+		this.mouseposBlue = this.inventory.getMouseposBlue(this.compound);
+		this.mouseposAlpha = this.inventory.getMouseposAlpha(this.compound);
 		
-		highlight.setInteger("highlightRed", config.getHighlightRed());
-		highlight.setInteger("highlightGreen", config.getHighlightGreen());
-		highlight.setInteger("highlightBlue", config.getHighlightBlue());
-		highlight.setInteger("highlightAlpha", config.getHighlightAlpha());
+		this.triangles = this.inventory.getTriangles(this.compound);
+		this.radius = this.inventory.getRadius(this.compound);
+		this.itemRadius = this.inventory.getItemRadius(this.compound);
 		
-		border.setInteger("borderRed", config.getBorderRed());
-		border.setInteger("borderGreen", config.getBorderGreen());
-		border.setInteger("borderBlue", config.getBorderBlue());
-		border.setInteger("borderAlpha", config.getBorderAlpha());
-		
-		mousepos.setInteger("mouseposRed", config.getMouseposRed());
-		mousepos.setInteger("mouseposGreen", config.getMouseposGreen());
-		mousepos.setInteger("mouseposBlue", config.getMouseposBlue());
-		mousepos.setInteger("mouseposAlpha", config.getMouseposAlpha());
-		
-		circle.setInteger("triangles", config.getTriangles());
-		circle.setInteger("radius", config.getRadius());
-		circle.setInteger("itemRadius", config.getItemRadius());
-		
-		general.setBoolean("itemRadiusAuto", config.isUpdateItemRadiusAutomatic());
-		general.setBoolean("muted", config.isMuted());
-		general.setString("name", config.getName());
-		
-		settings.appendTag(background);
-		settings.appendTag(highlight);
-		settings.appendTag(border);
-		settings.appendTag(mousepos);
-		settings.appendTag(circle);
-		settings.appendTag(general);
-		
-		compound.setTag("Settings", settings);
-		
-		return compound;
+		this.muted = inventory.isMuted(this.compound);
+		this.itemRadiusAuto = inventory.isUpdateItemRadiusAutomatic(this.compound);
+		this.name = inventory.getName(this.compound);
 	}
 	
 	@Override

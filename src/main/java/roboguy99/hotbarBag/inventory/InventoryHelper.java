@@ -54,6 +54,7 @@ public class InventoryHelper
 			
 			entityPlayer.inventory.setInventorySlotContents(0, HUDStack);
 			entityPlayer.inventory.markDirty();
+			//entityPlayer.inventory.currentItem = 0; //TODO Fix this
 		}
 	}
 }
