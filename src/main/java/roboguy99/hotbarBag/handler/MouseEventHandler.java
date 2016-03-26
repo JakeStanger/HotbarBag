@@ -14,6 +14,13 @@ import roboguy99.hotbarBag.network.ClientProxy;
 @SideOnly(Side.CLIENT)
 public class MouseEventHandler 
 {
+	RenderOverlayHandler renderOverlayHandler;
+	
+	public MouseEventHandler(RenderOverlayHandler renderOverlayHandler)
+	{
+		this.renderOverlayHandler = renderOverlayHandler;
+	}
+	
 	@SubscribeEvent
 	 public void onMouseEvent(MouseEvent event) 
 	{
@@ -22,7 +29,16 @@ public class MouseEventHandler
 		{
 			if(ClientProxy.keyHUD.getIsKeyPressed())
 			{
-				event.setCanceled(true);
+				if(event.dwheel != 0)
+				{
+					event.setCanceled(true);
+					Mouse.setCursorPosition(10, 10);
+				}
+				if(event.button == 1)
+				{
+					event.setCanceled(true);
+					this.renderOverlayHandler.setIsDisplayed(false);
+				}
 			}
 		}
 	}

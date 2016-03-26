@@ -56,6 +56,8 @@ public class RenderOverlayHandler extends Gui
 	private int sectorMouseIsIn = 0;
 	private int lastSector = this.sectorMouseIsIn;
 	
+	private boolean isControlledByMouse; //TODO Do something with this
+	
 	private Config config;
 	private BagInventory inventory;
 	private NBTTagCompound compound;
@@ -337,8 +339,14 @@ public class RenderOverlayHandler extends Gui
 		return this.isDisplayed;
 	}
 	
+	public void setIsDisplayed(boolean isDisplayed) //TODO Fix this
+	{
+		this.isDisplayed = isDisplayed;
+		this.isFirstTick = !isDisplayed;
+	}
+	
 	/**
-	 * Taken from RenderItem and changed to accept doubles rather than integers for more accurate icon placement
+	 * Taken from RenderItem and changed to accept doubles rather than integers for more accurate icon placement TODO move this to its own class
 	 * 
 	 * @param fontRenderer
 	 * @param textureManager

@@ -80,6 +80,8 @@ public class GuiConfig extends GuiScreen implements ISlider
 	private static final int ID_NAME = startId++;
 	
 	private static final int ID_MUTE = startId++;
+	private static final int ID_ANIM_SPEED = startId++;
+	
 	private static final int ID_RESET = startId++;
 	private static final int ID_SAVE = startId++;
 	

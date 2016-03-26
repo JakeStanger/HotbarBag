@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy
 		FMLCommonHandler.instance().bus().register(new RenderTickHandler(this.renderOverlayEventHandler));
 		
 		MinecraftForge.EVENT_BUS.register(this.renderOverlayEventHandler);
-		MinecraftForge.EVENT_BUS.register(new MouseEventHandler());
+		MinecraftForge.EVENT_BUS.register(new MouseEventHandler(this.renderOverlayEventHandler));
 		
 		this.keyHUD = new KeyBinding("key.bagHUD", Keyboard.KEY_F, "key.categories.inventory");
 		ClientRegistry.registerKeyBinding(this.keyHUD);
