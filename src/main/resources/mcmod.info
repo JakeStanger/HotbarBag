@@ -3,7 +3,7 @@
   "modid": "HotbarBag",
   "name": "Hotbar Bag",
   "description": "Adds a bag which acts like a small chest. It also has a GTA weapon wheel style selection",
-  "version": "1.1.3c",
+  "version": "1.0.0",
   "mcversion": "1.7.10",
   "updateUrl": "",
   "authorList": [
